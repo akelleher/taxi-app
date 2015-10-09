@@ -1,252 +1,60 @@
-html {
-	font-family: sans-serif;
+html, body
+{
+	background-image:url("images/login_background.png");
+	height:100%;
 }
-body{
-	height: 100%;
-	position: relative;
-	font-family: Arial, Helvetica, sans-serif;
-	color: #888;
-	font-size: 13px;
-	line-height: 20px;
-	min-width: 998px;
-	background:url(images/BG.jpg) repeat;
+#outer_container
+{
+	height:100%;
 }
-
-h1 {
-	font-size: 40px;
-	text-align: center;
-}
-
-h2 {
-	font-size: 28px;
-	margin: 0 0 24px 0;
-}
-
-img {
-	display: inline-block;
-}
-
-#forgotUser, #forgotPassword {
-	font-size: 10px;
-}
-
-section#formBox {
-	background-color: #eee;
-	border: 1px solid black;
-	border-radius: 10px;
-	margin: 40px auto;
-	padding: 24px;
-	width: 300px;
-	height: 335px;
-}
-section#formBox_password {
-	background-color: #eee;
-	border: 1px solid black;
-	border-radius: 10px;
-	margin: 40px auto;
-	padding: 24px;
-	width: 327px;
-	height: 650px;
-}
-
-section#formBox_password_small_heigh {
-	background-color: #eee;
-	border: 1px solid black;
-	border-radius: 10px;
-	margin: 40px auto;
-	padding: 24px;
-	width: 327px;
-	height: 270px;
-}
-form.loginForm label {
-	display: block;
-	margin: 6px 0;
-}
-
-form.loginForm input[type="text"],
-form.loginForm input[type="password"],
-form.loginForm textarea {
-	border-radius: 4px;
-	display: block;
-	font-size: 14px;
-	margin: 6px 0 12px 0;
-	padding: 6px;	
-	width: 90%;
-}
-
-#loginBtn {
-	border-radius: 4px;
-	color: #fff;
-	display: inline-block;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	padding: 8px 19px;
-	text-decoration: none;
-}
-
-#loginBtn:hover {
-	cursor: pointer;
-}
-
-#loginBtn {
-	background-color: #2a2a2a;
-	border: 1px solid black;	
-}
-
-#loginBtn:hover {
-	background-color: #a8a8a8;	
-}
-
-#loginBtn:active {
-	background-color: grey;	
-}
-/*just added
- to practice*/
-#centre h1{
-	color: #660033;
-
-}
-#centre h2 {
-	margin-left:0px;
-	font-size:30px;
-	font-weight:bold;
-	font-family:Myriad Pro;
-	/*text-transform:uppercase;*/
-	text-shadow: #fff 2px 2px 2px;
-	color: #666699;
-}
-.url{
-	display:block;
-	width:276px;
-	height:45px;
-	/*background:transparent;*/
-	border:0;
-	color:#bdbdbd;
-	font-family:helvetica, sans-serif;
-	font-size:17px;
-	padding-left:30px !important;
-}
-
-#url_user {
-	position:absolute;
-	display:block;
-	margin-top:-47px;
+.label-align
+{
 	float:left;
-	padding-right:10px;
-	margin-left:7px;
+	font-size:18px;
 }
-#url_password {
-	display:block;
-	position:absolute;
-	margin-top:-50px;
+.link-align
+{
 	float:left;
-	margin-left:9px;
 }
-#url_username{
-	position:absolute;
-	display:block;
-	margin-top:-50px;
-	float:left;
-	padding-right:10px;
-	margin-left:7px;
-}
-#links_right{
+.submit-align
+{
 	float:right;
-	position:relative;
-	padding-top:5px;
 	margin-right:25px;
+	width:20%;
+	min-width:100px;
 }
+#login
+{
+	background-color:#F2F2F2;
+	border-radius:15px;
+	height: 350px;
+	width:100%;
+	padding: 5%;
+}
+.form-group
+{
+	margin-top:50px;
+}
+.vertical-align
+{
+ min-height: 100%;  /* Fallback for vh unit */
+ min-height: 100vh;
+ display: -webkit-box;
+ display: -moz-box;
+ display: -ms-flexbox;
+ display: -webkit-flex;
+ display: flex;
 
-#links_right a{
-	color:#bbb;
-	font-size:11px;
-	text-decoration:none;
-	transition: color 0.5s linear;
-	-moz-transition: color 0.5s linear;
-	-webkit-transition: color 0.5s linear;
-	-o-transition: color 0.5s linear;
-}
+ -webkit-box-align : center;
+ -webkit-align-items : center;
+ -moz-box-align : center;
+ -ms-flex-align : center;
+ align-items : center;
 
-#links_right a:hover{
-	color:#292929;
+ width: 100%;
 }
-#submit{
-	float:left;
-	position:relative;
-	padding:0;
-	margin-top:10px;
-	margin-left:3px;
-	width:300px;
-	height:40px;
-	border:0;
-}
-#submit1 {
-	position:absolute;
-	z-index: 10;
-	border:0;
-}
-
-#submit2 {
-	position:absolute;
-	margin-top:0px;
-	border:0;
-}
-#submit_password{
-	float:left;
-	position:relative;
-	padding:0;
-	margin-top:3px;
-	margin-left:3px;
-	width:300px;
-	height:40px;
-	border:0;
-}
-#forgot {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	width:120px;
-	height:40px;
-	border:0;
-}
-#back_to_sign {
-	float:right;
-	position:relative;
-	padding-top:25px;
-	margin-right:1px;
-	color:blue;
-	font-size:16px;
-	text-decoration:none;
-	transition: color 1s linear;
-	-moz-transition: color 1s linear;
-	-webkit-transition: color 1s linear;
-	-o-transition: color 1s linear;
-}
-#back_to_sign_forgot_password {
-	float:right;
-	position:relative;
-	padding-top:15px;
-	margin-right:1px;
-	color:blue;
-	font-size:16px;
-	text-decoration:none;
-	transition: color 1s linear;
-	-moz-transition: color 1s linear;
-	-webkit-transition: color 1s linear;
-	-o-transition: color 1s linear;
-}
-
-.error {
-	background-color: pink;
-	
-}
-
 #login_error {
 	color: red;
 	padding: 0;
 	height: 10px;
-}
-.checkbox {
-	display: inline-block;
-	width: 60px;
 }
