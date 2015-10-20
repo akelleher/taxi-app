@@ -1,0 +1,13 @@
+html, body, #map_canvas
+{
+  overflow-x:hidden;
+	margin:0;
+	padding:0;
+	height:100%;
+}
+
+#map_canvas
+{
+	width: 100%;
+	background-color: #CCC;
+}
