@@ -7,6 +7,24 @@ html, body
 {
 	height:100%;
 }
+#login
+{
+	background-color:#F2F2F2;
+	border-radius:15px;
+	height: 350px;
+	width:100%;
+	padding: 5%;
+}
+#login_error
+{
+	color: red;
+	padding: 0;
+	font-size: 16px;
+}
+.form-group
+{
+	margin-top:50px;
+}
 .label-align
 {
 	float:left;
@@ -22,18 +40,6 @@ html, body
 	margin-right:25px;
 	width:20%;
 	min-width:100px;
-}
-#login
-{
-	background-color:#F2F2F2;
-	border-radius:15px;
-	height: 350px;
-	width:100%;
-	padding: 5%;
-}
-.form-group
-{
-	margin-top:50px;
 }
 .vertical-align
 {
@@ -52,9 +58,4 @@ html, body
  align-items : center;
 
  width: 100%;
-}
-#login_error {
-	color: red;
-	padding: 0;
-	height: 10px;
 }
