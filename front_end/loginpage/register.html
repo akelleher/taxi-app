@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Taxiping Login Page">
+
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="login.css">
+  </head>
+  <body>
+    <div class = "container" id = "outer_container">
+      <div class = "row vertical-align">
+        <div class = "col-xs-0 col-sm-3">
+        </div>
+        <div class = "col-xs-12 col-sm-6">
+          <center>
+            <div id = "login">
+              <form role = "form" class="loginForm">
+                <div class = "form-group">
+                  <label for = "pwd" class = "label-align">Enter a new password:</label>
+                  <input type = "password" class = "form-control" autofocus="autofocus" id = "pass" placeholder="New Password">
+                </div>
+                <div class = "form-group">
+                  <label for = "pwd" class = "label-align">Confirm password:</label>
+                  <input type = "password" class = "form-control" id = "confirm" placeholder="Confirm Password">
+                </div>
+                <button type="submit" class="btn btn-lg btn-default submit-align">Submit</button>
+              </form>
+            </div>
+						<section id="login_error"></section>
+          </center>
+        </div>
+        <div class = "col-xs-0 col-sm-3">
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
