@@ -6,22 +6,27 @@ require_once(SITE_ROOT . '../PHP/Course.php');
 session_start();
 if( isset($_SESSION) && isset($_SESSION['user']) )
 {
+    $t = $_SESSION['user']->getIsfirstTime();
+	if ($t == true)
+	{
+		header( 'Location: ' . SITE_URL . '/front_end/loginpage/register.php') ;
+	}
 	$t = $_SESSION['user']->getIsAdmin();
 	if ($t == true)
 	{
 		header( 'Location: ' . SITE_URL . '/front_end/Admin.php' ) ;
 	}
 
-	$t = $_SESSION['user']->getIsTA();
+	$t = $_SESSION['user']->getIsDispatcher();
 	if ($t == true)
 	{
-		header( 'Location: ' . SITE_URL . '/front_end/TA.php' ) ;
+		header( 'Location: ' . SITE_URL . '/front_end/Dispatcher.php' ) ;
 	}
 
-	$t = $_SESSION['user']->getIsStudent();
+	$t = $_SESSION['user']->getIsDriver();
 	if ($t == true)
 	{
-		header( 'Location: ' . SITE_URL . '/front_end/student.php') ;
+		header( 'Location: ' . SITE_URL . '/front_end/Driver.php') ;
 	}
 }
 
@@ -120,11 +125,13 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
                 	console.log("can't log in");
                   $('#login_error').html("User name and/or password invalid");
                 }
-								else
-								{
-			          	console.log("login successful")
-			            document.location.href = '<?php echo SITE_URL; ?>/front_end/' + data;
-								}
+                else
+                {
+                    console.log("login successful")
+                    //console.log(<?php echo SITE_URL; ?>)
+                    document.location.href = '<?php echo SITE_URL; ?>/front_end/' + data;
+                    
+                }
             },
             error: function ()
 						{

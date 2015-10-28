@@ -8,7 +8,7 @@ $message_class = '';
 
 if( isset($_POST['form']) ) {
 		try{
-			if($_POST['form'] === 'TA_CODE' && !empty($_POST['ta_code']) && $_SESSION['user']->addTACourseWithTA_Code($_POST['ta_code']) ) {
+			if($_POST['form'] === 'Dispatcher_CODE' && !empty($_POST['Dispatcher_code']) && $_SESSION['user']->addDispatcherCourseWithDispatcher_Code($_POST['Dispatcher_code']) ) {
 				$message = 'Success!';
 				$message_class = 'success';
 			}
@@ -30,16 +30,16 @@ if( isset($_POST['form']) ) {
 	<section id="Message" class="<?php echo $message_class ?>">
 			<?php echo $message ?>
 		</section>
-	<!--checks if you are a student and asks you if you have a TA_CODE-->
+	<!--checks if you are a Driver and asks you if you have a Dispatcher_CODE-->
 	<section>
-		<?php if( !$_SESSION['user']->getIsTA() ) : ?>
+		<?php if( !$_SESSION['user']->getIsDispatcher() ) : ?>
 			<h2>Are You a Driver?</h2>
 		<?php else : ?>
 			<h2>Add a new driver?</h2>
 		<?php endif; ?>
-		<form id="ta_code" action="#" method="POST">
-			<input type="hidden" name="form" value="TA_CODE" />
-			<input type='text' name='ta_code' placeholder='Enter your ta_code' />
+		<form id="Dispatcher_code" action="#" method="POST">
+			<input type="hidden" name="form" value="Dispatcher_CODE" />
+			<input type='text' name='Dispatcher_code' placeholder='Enter your Dispatcher_code' />
 			<input type='submit' value='Submit' />
 		</form>
 	</section>

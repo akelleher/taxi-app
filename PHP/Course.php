@@ -9,16 +9,16 @@ class course{
     protected $crse;
 	protected $name;
 	protected $inDB;
-	protected $ta_code;
+	protected $Dispatcher_code;
     
 	// ############################# CONSTRUCTORS ##############################
 	
-	private function __construct($subj, $crse, $ta_code, $name = '', $inDB = false){
+	private function __construct($subj, $crse, $Dispatcher_code, $name = '', $inDB = false){
 		$this->setSubj($subj);
 		$this->setCrse($crse);
 		$this->setName($name);
 		$this->setInDB($inDB);
-		$this->ta_code = $ta_code;
+		$this->Dispatcher_code = $Dispatcher_code;
 	}
 	
 	public static function fromDatabase($subj, $crse) {
@@ -33,20 +33,20 @@ class course{
 			return null;
 		}
 		
-		return new self($subj, $crse, $courseRows[0]['ta_code'], $courseRows[0]['name'], true);
+		return new self($subj, $crse, $courseRows[0]['Dispatcher_code'], $courseRows[0]['name'], true);
 	}
 	
 	public static function withValues($subj, $crse, $name) {
-		$ta_code = COURSE::generateRandomString();
-		$instance = new self( $subj, $crse, $ta_code, $name );
+		$Dispatcher_code = COURSE::generateRandomString();
+		$instance = new self( $subj, $crse, $Dispatcher_code, $name );
 		
 		$db = DB::getInstance();
 		try {
-			$result = $db->prep_execute('INSERT INTO courses (subj, crse, name, ta_code) VALUES (:subj, :crse, :name, :ta_code);', array(
+			$result = $db->prep_execute('INSERT INTO courses (subj, crse, name, Dispatcher_code) VALUES (:subj, :crse, :name, :Dispatcher_code);', array(
 				':subj' => strtoupper($subj),
 				':crse' => $crse,
 				':name' => strtoupper($name),
-				':ta_code' => $ta_code
+				':Dispatcher_code' => $Dispatcher_code
 			));
 			if( $result ) {
 				$instance->setInDB(true);
@@ -57,18 +57,18 @@ class course{
 		return $instance;
 	}
 	
-	public static function withTA_Code( $ta_code ) {
-		if( !is_string($ta_code) || strlen($ta_code) !== 50 ) {
-			throw new InvalidArgumentException('COURSE::withTA_Code(string $ta_code) => $ta_code should be a 50-character string.');
+	public static function withDispatcher_Code( $Dispatcher_code ) {
+		if( !is_string($Dispatcher_code) || strlen($Dispatcher_code) !== 50 ) {
+			throw new InvalidArgumentException('COURSE::withDispatcher_Code(string $Dispatcher_code) => $Dispatcher_code should be a 50-character string.');
 		}
 		
 		$db = DB::getInstance();
 		
-		$courseRows = $db->prep_execute('SELECT * from courses WHERE ta_code = :ta_code;', array(
-			':ta_code' => $ta_code
+		$courseRows = $db->prep_execute('SELECT * from courses WHERE Dispatcher_code = :Dispatcher_code;', array(
+			':Dispatcher_code' => $Dispatcher_code
 		));
 		
-		return (empty($courseRows)) ? null : new self($courseRows[0]['subj'], intval($courseRows[0]['crse']), $courseRows[0]['ta_code'], $courseRows[0]['name'], true);
+		return (empty($courseRows)) ? null : new self($courseRows[0]['subj'], intval($courseRows[0]['crse']), $courseRows[0]['Dispatcher_code'], $courseRows[0]['name'], true);
 	}
 	
 	// ########################## ACCESSOR FUNCTIONS ###########################
@@ -85,16 +85,16 @@ class course{
 		return $this->name;
 	}
 	
-	public function getTA_Code() {
-		return $this->ta_code;
+	public function getDispatcher_Code() {
+		return $this->Dispatcher_code;
 	}
 	
 	public function getInDB() {
 		return $this->inDB;
 	}
 	
-	public function validate_ta_code( $code ) {
-		return ($this->ta_code === $code) ? true : false;
+	public function validate_Dispatcher_code( $code ) {
+		return ($this->Dispatcher_code === $code) ? true : false;
 	}
 	
 	// ########################## MODIFIER FUNCTIONS ###########################

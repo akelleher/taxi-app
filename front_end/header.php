@@ -21,13 +21,13 @@ if( !isset($_SESSION) ) {
 	<nav>
 		<ul>
 			<?php if( $_SESSION['user']->getIsAdmin() ) : ?>
-						<li><a href="admin.php" <?php if( curPageName() === 'admin.php' ) : ?>class="current" <?php endif; ?>>SuperAdmin</a></li>
+						<li><a href="admin.php" <?php if( curPageName() === 'admin.php' ) : ?>class="current" <?php endif; ?>>Admin</a></li>
 			<?php endif; ?>
-			<?php if( $_SESSION['user']->getIsStudent() ) : ?>
-						<li><a href="student.php" <?php if( curPageName() === 'student.php' ) : ?>class="current" <?php endif; ?>>Admin</a></li>
+			<?php if( $_SESSION['user']->getIsDriver() ) : ?>
+						<li><a href="Driver.php" <?php if( curPageName() === 'Driver.php' ) : ?>class="current" <?php endif; ?>>Driver</a></li>
 			<?php endif; ?>
-			<?php if( $_SESSION['user']->getIsTA() ) : ?>
-						<li><a href="TA.php" <?php if( curPageName() === 'TA.php' ) : ?> class="current" <?php endif; ?>>Dispatcher</a></li>
+			<?php if( $_SESSION['user']->getIsDispatcher() ) : ?>
+						<li><a href="Dispatcher.php" <?php if( curPageName() === 'Dispatcher.php' ) : ?> class="current" <?php endif; ?>>Dispatcher</a></li>
 			<?php endif; ?>
 
 			<li><a href="search_add.php" <?php if( curPageName() === 'search_add.php' ) : ?> class="current" <?php endif; ?>>Search/Add Driver</a></li>

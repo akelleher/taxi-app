@@ -7,7 +7,7 @@
 
 
 	try {
-		//$dbconn = new DB();
+		//$dbconn = new DB(); 
 		$dbconn = DB::getInstance();
 
 		if (isset($_POST['login'])) {
@@ -22,14 +22,23 @@
 				if ($user) {
 					if ($user->login($password)) {
 						//echo 1;
-						if( $user->getIsAdmin() ) {
+                        if( $user->getIsfirstTime() && $user->getIsAdmin() ) {
+							echo 'loginpage/register.php';
+						}
+                        elseif( $user->getIsfirstTime() && $user->getIsDriver() ) {
+							echo 'loginpage/register.php';
+						}
+                        elseif( $user->getIsfirstTime() && $user->getIsDispatcher() ) {
+							echo 'loginpage/register.php';
+						}
+                        elseif( $user->getIsAdmin() ) {
 							echo 'admin.php';
 						}
-						elseif( $user->getIsStudent() ) {
-							echo 'student.php';
+						elseif( $user->getIsDriver() ) {
+							echo 'Driver.php';
 						}
-						elseif( $user->getIsTA() ) {
-							echo 'TA.php';
+						elseif( $user->getIsDispatcher() ) {
+							echo 'Dispatcher.php';
 						}
 						else {
 							echo '_profile.php';
@@ -53,28 +62,28 @@
 
 		if (isset($_POST['register'])) {
 			$empty = empty($_POST['firstName']) || empty($_POST['lastName']) || empty($_POST['email']) || empty($_POST['password']) 
-					|| empty($_POST['isStudent']) || empty($_POST['isTA']) || empty($_POST['isTutor']); 
-			if( isset($_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password'], $_POST['isStudent'], $_POST['isTA'], $_POST['isTutor']) && $empty == false) { 
+					|| empty($_POST['isDriver']) || empty($_POST['isDispatcher']) || empty($_POST['isfirstTime']); 
+			if( isset($_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password'], $_POST['isDriver'], $_POST['isDispatcher'], $_POST['isfirstTime']) && $empty == false) { 
 
 				$firstName = mysql_real_escape_string(stripslashes($_POST['firstName']));
 				$lastName = mysql_real_escape_string(stripslashes($_POST['lastName']));
 				$email = mysql_real_escape_string(stripslashes($_POST['email']));
 				$password = mysql_real_escape_string(stripslashes($_POST['password']));
-				$isStudent = mysql_real_escape_string(stripslashes($_POST['isStudent']));
-				$isTA = mysql_real_escape_string(stripslashes($_POST['isTA']));
-				$isTutor = mysql_real_escape_string(stripslashes($_POST['isTutor']));
+				$isDriver = mysql_real_escape_string(stripslashes($_POST['isDriver']));
+				$isDispatcher = mysql_real_escape_string(stripslashes($_POST['isDispatcher']));
+				$isfirstTime = mysql_real_escape_string(stripslashes($_POST['isfirstTime']));
 				
 				// Transforms strings into boolean values
-				$isStudent = ($isStudent === 'true') ? true : false;
-				$isTA = ($isTA === 'true') ? true : false;
-				$isTutor = ($isTutor === 'true') ? true : false;
+				$isDriver = ($isDriver === 'true') ? true : false;
+				$isDispatcher = ($isDispatcher === 'true') ? true : false;
+				$isfirstTime = ($isfirstTime === 'true') ? true : false;
 
 				// If user in database
 				if( USER::fromDatabase($email) !== null ) {
 					echo 1;			
 				}
 				else {
-					$user = User::withValues($email, $password, $isStudent, $isTA, $isTutor, false, $firstName, $lastName);
+					$user = User::withValues($email, $password, $isDriver, $isDispatcher, $isfirstTime, false, $firstName, $lastName);
 					//var_dump($user);
 
 					if ($user === null) { //check if error instantiating user (password too short)

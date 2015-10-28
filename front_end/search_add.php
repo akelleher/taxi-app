@@ -10,7 +10,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 <!DOCTYPE html>
 <html><head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>TA Scheduler</title>
+		<title>TaxiPing</title>
 		<link rel="stylesheet" type="text/css" href="./resources/user.css">
 		<!--[if lt IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -30,10 +30,10 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 			<section class="courses">
 					<figure>
 						<hgroup>
-							<h2>Search Your TAs </h2>
-							<form id="search_ta_form" method="GET">
+							<h2>Search Users </h2>
+							<form id="search_Dispatcher_form" method="GET">
 								<p>Search by name:</p>
-								<input type="search" id="search_ta" name="search_ta" placeholder="Enter name of TA"/>
+								<input type="search" id="search_Dispatcher" name="search_Dispatcher" placeholder="Enter name of User"/>
 								<input type="submit" value="Search"/>
 							</form>
 							<hr>						
@@ -69,10 +69,10 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 			<aside>
 				<!--<section class="popular-recipes">
 					<?php/*
-						$t = $_SESSION['user']->getIsTA();
+						$t = $_SESSION['user']->getIsDispatcher();
 
 						if ($t == true) {
-								echo "<h2>Are You a TA?</h2>";
+								echo "<h2>Are You a Dispatcher?</h2>";
 								echo "<input type='text' name='firstname' placeholder='Enter your code'>";
 						    echo "<input type='submit' value='Submit'>";
 						}*/
@@ -81,29 +81,29 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 			</aside>
 			
 			<footer>
-				© 2014 TA Hunters
+				© 2015 TaxiPing
 			</footer>
 		</div><!-- .wrapper -->	
 
 		<script src="resources/jquery-1.11.1.min.js"></script>
 		<script>
-			$('#search_ta_form').submit(function (event) {
+			$('#search_Dispatcher_form').submit(function (event) {
 				event.preventDefault();
 				$('#results > span').empty();
 				$('#results > table').empty();
 				//$('#results > div').empty();
-				var ta_name = $('#search_ta').val();
+				var Dispatcher_name = $('#search_Dispatcher').val();
 
 				$('input').removeClass('error');
 
-				if (!ta_name) {
-					$('#search_ta').addClass('error');
+				if (!Dispatcher_name) {
+					$('#search_Dispatcher').addClass('error');
 				}
 				else {
 					
 					$.ajax({
 		                url: "./find.php",
-		                data: {'ta_name': ta_name},
+		                data: {'Dispatcher_name': Dispatcher_name},
 		                method: 'GET',
 		                success: function (data) {
 		                    data = $.trim(data);
@@ -178,7 +178,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		                   	//console.log("data: " + data.length);
 		                   	//console.log(data);
 		                   	if (data.length > 0) {
-		                   		$('#results > table').append("<thead><tr><th>Subject</th><th>Course #</th><th>Name</th><th>TA Name</th><th>TA Email</th><th>Add?</th></tr></thead>");
+		                   		$('#results > table').append("<thead><tr><th>Subject</th><th>Course #</th><th>Name</th><th>Dispatcher Name</th><th>Dispatcher Email</th><th>Add?</th></tr></thead>");
 		                   		$('#results > table').append("<tbody>" + data + "</tbody>");
 		                   		//$('#results > div').append("<input type='submit' value='Add'>");
 		                   	}
@@ -219,7 +219,7 @@ require(SITE_ROOT . '/php/check_logged_in.php');
 		                   		$('#results > span').html("Added successfully");
 		                   	}
 		                   	if (data === "0") {
-		                   		$('#results > span').html("Course already added to student");
+		                   		$('#results > span').html("Course already added to Driver");
 		               
 		                   	}
 		                },

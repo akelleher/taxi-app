@@ -13,9 +13,9 @@ CREATE TABLE users(
 	firstName VARCHAR(255),
 	lastName VARCHAR(255),
 	isAdmin BOOL NOT NULL,
-	isTA BOOL NOT NULL,
-	isTutor BOOL NOT NULL,
-	isStudent BOOL NOT NULL,
+	isDispatcher BOOL NOT NULL,
+	isDriver BOOL NOT NULL,
+    isFirstTime BOOL NOT NULL,
 	PRIMARY KEY(email)
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE courses(
 	subj CHAR(4) NOT NULL,
 	crse MEDIUMINT(3) UNSIGNED NOT NULL,
 	name VARCHAR(255) NOT NULL,
-	ta_code VARCHAR(50) NOT NULL UNIQUE,
+	Dispatcher_code VARCHAR(50) NOT NULL UNIQUE,
 	PRIMARY KEY(subj, crse)
 );
 
@@ -38,8 +38,8 @@ CREATE TABLE Passwords(
 		ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS students_courses;
-CREATE TABLE students_courses(
+DROP TABLE IF EXISTS Drivers_courses;
+CREATE TABLE Drivers_courses(
 	email VARCHAR(255) NOT NULL,
 	subj CHAR(4) NOT NULL,
 	crse MEDIUMINT(3) UNSIGNED NOT NULL,
@@ -52,8 +52,8 @@ CREATE TABLE students_courses(
 		ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS TAs_courses;
-CREATE TABLE TAs_courses(
+DROP TABLE IF EXISTS Dispatchers_courses;
+CREATE TABLE Dispatchers_courses(
 	email VARCHAR(255) NOT NULL,
 	subj CHAR(4) NOT NULL,
 	crse MEDIUMINT(3) UNSIGNED NOT NULL,
@@ -66,8 +66,8 @@ CREATE TABLE TAs_courses(
 		ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS TA_Hours;
-CREATE TABLE TA_Hours(
+DROP TABLE IF EXISTS Dispatcher_Hours;
+CREATE TABLE Dispatcher_Hours(
 	email VARCHAR(255) NOT NULL,
 	subj CHAR(4) NOT NULL,
 	crse MEDIUMINT(3) UNSIGNED NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE TA_Hours(
 	start_time TIME NOT NULL,
 	end_time TIME NOT NULL,
 	PRIMARY KEY(email, subj, crse, week_day),
-	FOREIGN KEY(email, subj, crse) REFERENCES tas_courses(email, subj, crse)
+	FOREIGN KEY(email, subj, crse) REFERENCES Dispatchers_courses(email, subj, crse)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE
 );

@@ -9,9 +9,9 @@ class User {
 	protected $password = '';
 	protected $email = '';
 	protected $isAdmin = false;
-	protected $isTA = false;
-	protected $isTutor = false;
-	protected $isStudent = false;
+	protected $isDispatcher = false;
+	protected $isfirstTime = false;
+	protected $isDriver = false;
 	protected $firstName = null;
 	protected $lastName = null;
 	
@@ -20,13 +20,13 @@ class User {
 	
 	// Private constructor helper function. Called by fromDatabase and
 	// withValues
-	private function __construct( $email, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null, $inDB = false ) {
+	private function __construct( $email, $isDriver = false, $isDispatcher = false, $isfirstTime = false, $isAdmin = false, $firstName = null, $lastName = null, $inDB = false ) {
 		// Calls set functions of all variables for invalid argument errors
 		if( !($this->setEmail($email) &&
 		$this->setIsAdmin($isAdmin) &&
-		$this->setIsTA($isTA) &&
-		$this->setIsTutor($isTutor) &&
-		$this->setIsStudent($isStudent) &&
+		$this->setIsDispatcher($isDispatcher) &&
+		$this->setIsfirstTime($isfirstTime) &&
+		$this->setIsDriver($isDriver) &&
 		$this->setFirstName($firstName) &&
 		$this->setLastName($lastName)) ) {
 			return null;
@@ -41,7 +41,7 @@ class User {
 		// Get user info from database's user table
 		$db = DB::getInstance();
 		try {
-			$usersRows = $db->prep_execute('SELECT u.email, u.firstName, u.lastName, u.isAdmin, u.isTA, u.isTutor, u.isStudent, p.password FROM users AS u INNER JOIN passwords AS p ON u.email = p.email WHERE u.email = :value', array(
+			$usersRows = $db->prep_execute('SELECT u.email, u.firstName, u.lastName, u.isAdmin, u.isDispatcher, u.isfirstTime, u.isDriver, p.password FROM users AS u INNER JOIN passwords AS p ON u.email = p.email WHERE u.email = :value', array(
 				':value' => $email
 			));
 		}
@@ -55,7 +55,7 @@ class User {
 		}
 		
 		// Call private user constructor with database information
-		$instance = new self( $usersRows[0]['email'], (bool)$usersRows[0]['isStudent'], (bool)$usersRows[0]['isTA'], (bool)$usersRows[0]['isTutor'], (bool)$usersRows[0]['isAdmin'], $usersRows[0]['firstName'], $usersRows[0]['lastName'], true );
+		$instance = new self( $usersRows[0]['email'], (bool)$usersRows[0]['isDriver'], (bool)$usersRows[0]['isDispatcher'], (bool)$usersRows[0]['isfirstTime'], (bool)$usersRows[0]['isAdmin'], $usersRows[0]['firstName'], $usersRows[0]['lastName'], true );
 		
 		// Set Password
 		$instance->password = $usersRows[0]['password'];
@@ -65,9 +65,9 @@ class User {
 	}
 	
 	// Constructor builds a new user from parameters
-	public static function withValues( $email, $password, $isStudent = false, $isTA = false, $isTutor = false, $isAdmin = false, $firstName = null, $lastName = null ) {
+	public static function withValues( $email, $password, $isDriver = false, $isDispatcher = false, $isfirstTime = false, $isAdmin = false, $firstName = null, $lastName = null ) {
 		// Calls private user constructor with provided arguments
-		$instance = new self($email, $isStudent, $isTA, $isTutor, $isAdmin, $firstName, $lastName );
+		$instance = new self($email, $isDriver, $isDispatcher, $isfirstTime, $isAdmin, $firstName, $lastName );
 
 		// Sets password. Returns null on error
 		try {
@@ -79,13 +79,13 @@ class User {
 		
 		$db = DB::getInstance();
 		try {
-			$result = $db->multi_prep_execute(['INSERT INTO users (email, isAdmin, isTA, isTutor, isStudent, firstName, lastName) VALUES (:email, :isAdmin, :isTA, :isTutor, :isStudent, :firstName, :lastName);', 'INSERT INTO passwords (email, password) VALUES (:email, :password);'], array(
+			$result = $db->multi_prep_execute(['INSERT INTO users (email, isAdmin, isDispatcher, isfirstTime, isDriver, firstName, lastName) VALUES (:email, :isAdmin, :isDispatcher, :isfirstTime, :isDriver, :firstName, :lastName);', 'INSERT INTO passwords (email, password) VALUES (:email, :password);'], array(
 				[
 					':email' => $instance->getEmail(),
 					':isAdmin' => $instance->getIsAdmin(),
-					':isStudent' => $instance->getIsStudent(),
-					':isTA' => $instance->getIsTA(),
-					':isTutor' => $instance->getIsTutor(),
+					':isDriver' => $instance->getIsDriver(),
+					':isDispatcher' => $instance->getIsDispatcher(),
+					':isfirstTime' => $instance->getIsfirstTime(),
 					':firstName' => $instance->getFirstName(),
 					':lastName' => $instance->getLastName()
 				],
@@ -151,9 +151,9 @@ class User {
 	public function store($update = False) {
 		$db = DB::getInstance();
 		
-		$pstmt = 'INSERT INTO users (email, isStudent, isTA, isTutor, isAdmin, firstName, lastName) VALUES (:email, :isStudent, :isTA, :isTutor, :isAdmin, :firstName, :lastName)';
+		$pstmt = 'INSERT INTO users (email, isDriver, isDispatcher, isfirstTime, isAdmin, firstName, lastName) VALUES (:email, :isDriver, :isDispatcher, :isfirstTime, :isAdmin, :firstName, :lastName)';
 		if( $update ) {
-			$pstmt .= ' ON DUPLICATE KEY UPDATE email = VALUES(email), isStudent = VALUES(isStudent), isTA = VALUES(isTA), isTutor = VALUES(isTutor), isAdmin = VALUES(isAdmin), firstName = VALUES(firstName), lastName = VALUES(lastName)';
+			$pstmt .= ' ON DUPLICATE KEY UPDATE email = VALUES(email), isDriver = VALUES(isDriver), isDispatcher = VALUES(isDispatcher), isfirstTime = VALUES(isfirstTime), isAdmin = VALUES(isAdmin), firstName = VALUES(firstName), lastName = VALUES(lastName)';
 		}
 		$pstmt .= ';';
 		$pstmt_array[] = $pstmt;
@@ -168,9 +168,9 @@ class User {
 			$results = $db->multi_prep_execute( $pstmt_array, array(
 				[
 					':email' => $this->email,
-					':isStudent' => ($this->isStudent) ? 1 : 0,
-					':isTA' => ($this->isTA) ? 1 : 0,
-					':isTutor' => ($this->isTutor) ? 1 : 0,
+					':isDriver' => ($this->isDriver) ? 1 : 0,
+					':isDispatcher' => ($this->isDispatcher) ? 1 : 0,
+					':isfirstTime' => ($this->isfirstTime) ? 1 : 0,
 					':isAdmin' => ($this->isAdmin) ? 1 : 0,
 					':firstName' => $this->firstName,
 					':lastName' => $this->lastName
@@ -204,19 +204,19 @@ class User {
 		return $this->isAdmin;
 	}
 	
-	// Return student flag
-	public function getIsStudent() {
-		return $this->isStudent;
+	// Return Driver flag
+	public function getIsDriver() {
+		return $this->isDriver;
 	}
 	
-	// Return TA flag
-	public function getIsTA() {
-		return $this->isTA;
+	// Return Dispatcher flag
+	public function getIsDispatcher() {
+		return $this->isDispatcher;
 	}
 	
-	// Return Tutor flag
-	public function getIsTutor() {
-		return $this->isTutor;
+	// Return firstTime flag
+	public function getIsfirstTime() {
+		return $this->isfirstTime;
 	}
 	
 	// Return User's first name
@@ -229,13 +229,13 @@ class User {
 		return $this->lastName;
 	}
 	
-	// Return an array with database course rows that the student is enrolled in
-	public function getStudentCourses() {
+	// Return an array with database course rows that the Driver is enrolled in
+	public function getDriverCourses() {
 		require_once(SITE_ROOT . '\PHP\Course.php');
 		$courses = array();
-		if( $this->isStudent && $this->inDB ) {
+		if( $this->isDriver && $this->inDB ) {
 			$db = DB::getInstance();
-			$result = $db->prep_execute('SELECT subj, crse FROM students_courses WHERE email = :email', array(
+			$result = $db->prep_execute('SELECT subj, crse FROM Drivers_courses WHERE email = :email', array(
 				':email' => $this->email
 			));
 			
@@ -246,13 +246,13 @@ class User {
 		return $courses;
 	}
 	
-	// Return an array with the course objects that the ta is teaching
-	public function getTACourses() {
+	// Return an array with the course objects that the Dispatcher is teaching
+	public function getDispatcherCourses() {
 		require_once(SITE_ROOT . '\PHP\Course.php');
 		$courses = array();
-		if( $this->isTA && $this->inDB ) {
+		if( $this->isDispatcher && $this->inDB ) {
 			$db = DB::getInstance();
-			$result = $db->prep_execute('SELECT subj, crse FROM tas_courses WHERE email = :email', array(
+			$result = $db->prep_execute('SELECT subj, crse FROM Dispatchers_courses WHERE email = :email', array(
 				':email' => $this->email
 			));
 			
@@ -263,12 +263,12 @@ class User {
 		return $courses;
 	}
 	
-	public function getTAOfficeHours() {
+	public function getDispatcherOfficeHours() {
 		require_once( SITE_ROOT . '\php\Course.php');
 		$hours = array();
-		if( $this->isTA && $this->inDB ) {
+		if( $this->isDispatcher && $this->inDB ) {
 			$db = DB::getInstance();
-			$hours_rows = $db->prep_execute('SELECT subj, crse, week_day, start_time, end_time FROM ta_hours WHERE email = :email;', array(
+			$hours_rows = $db->prep_execute('SELECT subj, crse, week_day, start_time, end_time FROM Dispatcher_hours WHERE email = :email;', array(
 				':email' => $this->email
 			));
 			
@@ -284,23 +284,23 @@ class User {
 		return $hours;
 	}
 	
-	// Return an array with database TAs that are mapped to student's courses
-	public function getStudentTAs() {
-		if( $this->isStudent && $this->inDB ) {
+	// Return an array with database Dispatchers that are mapped to Driver's courses
+	public function getDriverDispatchers() {
+		if( $this->isDriver && $this->inDB ) {
 			$db = DB::getInstance();
-			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse FROM users as u1 INNER JOIN students_courses AS sc ON u1.email = sc.email INNER JOIN tas_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.email = u2.email WHERE u1.email = :email', array(
+			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse FROM users as u1 INNER JOIN Drivers_courses AS sc ON u1.email = sc.email INNER JOIN Dispatchers_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.email = u2.email WHERE u1.email = :email', array(
 				':email' => $this->email
 			));
 		}
 		return false;
 	}
 	
-	// Return an array with database TAs that are mapped to student's courses
-	// along with that TA's office hours for that course.
-	public function getStudentTAsOfficeHours() {
-		if( $this->isStudent && $this->inDB ) {
+	// Return an array with database Dispatchers that are mapped to Driver's courses
+	// along with that Dispatcher's office hours for that course.
+	public function getDriverDispatchersOfficeHours() {
+		if( $this->isDriver && $this->inDB ) {
 			$db = DB::getInstance();
-			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse, h.week_day, h.start_time, h.end_time FROM users as u1 INNER JOIN students_courses AS sc ON u1.email = sc.email INNER JOIN tas_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.email = u2.email LEFT OUTER JOIN ta_hours as h ON u2.email = h.email AND tc.subj = h.subj AND tc.crse = h.crse WHERE u1.email = :email', array(
+			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse, h.week_day, h.start_time, h.end_time FROM users as u1 INNER JOIN Drivers_courses AS sc ON u1.email = sc.email INNER JOIN Dispatchers_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.email = u2.email LEFT OUTER JOIN Dispatcher_hours as h ON u2.email = h.email AND tc.subj = h.subj AND tc.crse = h.crse WHERE u1.email = :email', array(
 				':email' => $this->email
 			));
 		}
@@ -310,31 +310,31 @@ class User {
 	
 	// ########################## MODIFIER FUNCTIONS ###########################
 	
-	// Creates a mapping in the database table students_courses or tas_courses
-	// depending on $rel's value. Maps students or tas to courses.
+	// Creates a mapping in the database table Drivers_courses or Dispatchers_courses
+	// depending on $rel's value. Maps Drivers or Dispatchers to courses.
 	public function addUserCourse( $rel, $subj, $crse ) {
 		// --- Argument Type Error Handling ---
 		
 		// $rel is a string
 		if( !is_string($rel) ) {
-			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+			throw new InvalidArgumentException('USER::addDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
 		}
-		else { // $rel is 'student' or 'ta'
+		else { // $rel is 'Driver' or 'Dispatcher'
 			$rel = strtolower($rel);
-			if( $rel !== 'student' && $rel !== 'ta' ) {
-				throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student" or "ta"');
+			if( $rel !== 'Driver' && $rel !== 'Dispatcher' ) {
+				throw new InvalidArgumentException('USER::addDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver" or "Dispatcher"');
 			}
 		}
 		// $subj is a string
 		if( !is_string($subj) ) {
-			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $subj should be a string.');
+			throw new InvalidArgumentException('USER::addDriverCourse(string $rel, string $subj, int $crse) => $subj should be a string.');
 		}
 		// $crse is an int
 		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::addStudentCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
+			throw new InvalidArgumentException('USER::addDriverCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
 		}
-		// User's ta or student flag is true for the corresponding $rel option
-		if( ($rel === 'student' && !$this->isStudent) || ($rel === 'ta' && !$this->isTA) ) {
+		// User's Dispatcher or Driver flag is true for the corresponding $rel option
+		if( ($rel === 'Driver' && !$this->isDriver) || ($rel === 'Dispatcher' && !$this->isDispatcher) ) {
 			return false;
 		}
 
@@ -357,22 +357,22 @@ class User {
 		return false;
 	}
 	
-	public function addTACourseWithTA_Code( $ta_code ) {
+	public function addDispatcherCourseWithDispatcher_Code( $Dispatcher_code ) {
 		if( $this->inDB ) {
 			require_once(SITE_ROOT . '/PHP/Course.php');
-			$course = COURSE::withTA_Code( $ta_code );
+			$course = COURSE::withDispatcher_Code( $Dispatcher_code );
 			
 			$db = DB::getInstance();
 			try {
 				if( $course !== null ) {
-					$result = $db->prep_execute( 'INSERT INTO tas_courses (email, subj, crse) VALUES (:email, :subj, :crse)', array(
+					$result = $db->prep_execute( 'INSERT INTO Dispatchers_courses (email, subj, crse) VALUES (:email, :subj, :crse)', array(
 						':email' => $this->email,
 						':subj' => $course->getSubj(),
 						':crse' => $course->getCrse()
 					));
 					
 					if( !empty($result) ) {
-						return $this->setIsTA(true, true);
+						return $this->setIsDispatcher(true, true);
 					}
 				}
 			}
@@ -384,34 +384,34 @@ class User {
 		return false;
 	}
 	
-	public function addTAOfficeHours( $subj, $crse, $week_day, $start_time, $end_time ) {
+	public function addDispatcherOfficeHours( $subj, $crse, $week_day, $start_time, $end_time ) {
 		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
 		}
 		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
 		}
 		if( !is_string($week_day) ) {
-			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
 		}
 		$week_day = strtoupper($week_day);
 		if( $week_day !== 'SUNDAY' && $week_day !== 'MONDAY' && $week_day !== 'TUESDAY' && $week_day !== 'WEDNESDAY' && $week_day !== 'THURSDAY' && $week_day !== 'FRIDAY' && $week_day !== 'SATURDAY' ) {
-			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
 		}
 		if( !is_string( $start_time ) || !preg_match('/\d{1,2}:\d{2}/', $start_time) ) {
-			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $start_time should be a string of the format "HH:MM".');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $start_time should be a string of the format "HH:MM".');
 		}
 		if( !is_string( $end_time ) || !preg_match('/\d{1,2}:\d{2}/', $end_time) || $end_time <= $start_time ) {
-			throw new InvalidArgumentException('USER::addTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $end_time should be a string of the format "HH:MM" and be later in the day then $start_time.');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $end_time should be a string of the format "HH:MM" and be later in the day then $start_time.');
 		}
 	
-		if( !$this->isTA ) {
+		if( !$this->isDispatcher ) {
 			return false;
 		}
 		
 		$db = DB::getInstance();
 		try {
-			$result = $db->prep_execute('INSERT INTO ta_hours (email, subj, crse, week_day, start_time, end_time) VALUES (:email, :subj, :crse, :week_day, :start_time, :end_time);', array(
+			$result = $db->prep_execute('INSERT INTO Dispatcher_hours (email, subj, crse, week_day, start_time, end_time) VALUES (:email, :subj, :crse, :week_day, :start_time, :end_time);', array(
 				':email' => $this->email,
 				':subj' => $subj,
 				':crse' => $crse,
@@ -430,30 +430,30 @@ class User {
 		return false;
 	}
 	
-	public function removeTAOfficeHours( $subj, $crse, $week_day ) {
+	public function removeDispatcherOfficeHours( $subj, $crse, $week_day ) {
 		// --- ARGUMENT ERROR HANDLING ---
 		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::removeTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
+			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
 		}
 		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::removeTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
+			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
 		}
 		if( !is_string($week_day) ) {
-			throw new InvalidArgumentException('USER::removeTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
+			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
 		}
 		// Sets $week_day to all uppercase characters after checking if string
 		$week_day = strtoupper($week_day);
 		if( $week_day !== 'SUNDAY' && $week_day !== 'MONDAY' && $week_day !== 'TUESDAY' && $week_day !== 'WEDNESDAY' && $week_day !== 'THURSDAY' && $week_day !== 'FRIDAY' && $week_day !== 'SATURDAY' ) {
-			throw new InvalidArgumentException('USER::removeTAOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
+			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
 		}
 	
-		if( !$this->isTA ) {
+		if( !$this->isDispatcher ) {
 			return false;
 		}
 		
 		$db = DB::getInstance();
 		try {
-			$result = $db->prep_execute('DELETE FROM ta_hours WHERE email = :email AND subj = :subj AND crse = :crse AND week_day = :week_day;', array(
+			$result = $db->prep_execute('DELETE FROM Dispatcher_hours WHERE email = :email AND subj = :subj AND crse = :crse AND week_day = :week_day;', array(
 				':email' => $this->email,
 				':subj' => $subj,
 				':crse' => $crse,
@@ -470,28 +470,28 @@ class User {
 		return false;
 	}
 	
-	// Removes mapping in the database table students_courses or tas_courses
+	// Removes mapping in the database table Drivers_courses or Dispatchers_courses
 	// depending on $rel's value.
 	public function removeUserCourse( $rel, $subj, $crse ) {
 		// Argument Type Error Handling
 		
 		// $rel is a string
 		if( !is_string($rel) ) {
-			throw new InvalidArgumentException('USER::removeStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
 		}
-		else { // $rel is either 'student' or 'ta'
+		else { // $rel is either 'Driver' or 'Dispatcher'
 			$rel = strtolower($rel);
-			if( $rel !== 'student' && $rel !== 'ta' ) {
-				throw new DomainException('USER::removeStudentCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "student", "ta"');
+			if( $rel !== 'Driver' && $rel !== 'Dispatcher' ) {
+				throw new DomainException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
 			}
 		}
 		// $subj is a string
 		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::removeStudentCourse(string $rel, string $subj, int $crse) => $subj should be a 4 character string.');
+			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $subj should be a 4 character string.');
 		}
 		// $crse is an int
 		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::removeStudentCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
+			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
 		}
 
 		// If user is in database, remove user-course mapping to database
@@ -551,48 +551,48 @@ class User {
 		return true;
 	}
 	
-	// Validates and sets the TA flag of the user. DOES NOT STORE IN
+	// Validates and sets the Dispatcher flag of the user. DOES NOT STORE IN
 	// DATABASE! Call USER::store(bool) to store in database.
-	public function setIsTA( $isTA, $setDB = false ) {
-		if( !is_bool($isTA) ) {
-			throw new InvalidArgumentException('USER::setIsTA(string $isTA, bool $setDB) => $isTA should be a boolean.');
+	public function setIsDispatcher( $isDispatcher, $setDB = false ) {
+		if( !is_bool($isDispatcher) ) {
+			throw new InvalidArgumentException('USER::setIsDispatcher(string $isDispatcher, bool $setDB) => $isDispatcher should be a boolean.');
 		}
 		
-		if( !$this->setVarInDB( $setDB, 'users', 'isTA', $isTA ) ) {
+		if( !$this->setVarInDB( $setDB, 'users', 'isDispatcher', $isDispatcher ) ) {
 			return false;
 		}
 		
-		$this->isTA = $isTA;
+		$this->isDispatcher = $isDispatcher;
 		return true;
 	}
 	
-	// Validates and sets the tutor flag of the user. DOES NOT STORE IN
+	// Validates and sets the firstTime flag of the user. DOES NOT STORE IN
 	// DATABASE! Call USER::store(bool) to store in database.
-	public function setIsTutor( $isTutor, $setDB = false ) {
-		if( !is_bool($isTutor) ) {
-			throw new InvalidArgumentException('USER::setIsTutor(string $isTutor, bool $setDB) => $isTutor should be a boolean.');
+	public function setIsfirstTime( $isfirstTime, $setDB = false ) {
+		if( !is_bool($isfirstTime) ) {
+			throw new InvalidArgumentException('USER::setIsfirstTime(string $isfirstTime, bool $setDB) => $isfirstTime should be a boolean.');
 		}
 		
-		if( !$this->setVarInDB( $setDB, 'users', 'isTutor', $isTutor ) ) {
+		if( !$this->setVarInDB( $setDB, 'users', 'isfirstTime', $isfirstTime ) ) {
 			return false;
 		}
 		
-		$this->isTutor = $isTutor;
+		$this->isfirstTime = $isfirstTime;
 		return true;
 	}
 	
-	// Validates and sets the student flag of the user. DOES NOT STORE IN
+	// Validates and sets the Driver flag of the user. DOES NOT STORE IN
 	// DATABASE! Call USER::store(bool) to store in database.
-	public function setIsStudent( $isStudent, $setDB = false ) {
-		if( !is_bool($isStudent) ) {
-			throw new InvalidArgumentException('USER::setIsStudent(string $isStudent, bool $setDB) => $isStudent should be a boolean.');
+	public function setIsDriver( $isDriver, $setDB = false ) {
+		if( !is_bool($isDriver) ) {
+			throw new InvalidArgumentException('USER::setIsDriver(string $isDriver, bool $setDB) => $isDriver should be a boolean.');
 		}
 		
-		if( !$this->setVarInDB( $setDB, 'users', 'isStudent', $isStudent ) ) {
+		if( !$this->setVarInDB( $setDB, 'users', 'isDriver', $isDriver ) ) {
 			return false;
 		}
 		
-		$this->isStudent = $isStudent;
+		$this->isDriver = $isDriver;
 		return true;
 	}
 	
@@ -659,26 +659,26 @@ class User {
 		return $allUsers;
 	}
 	
-	// Return an array of User objects of all the Studentss in the database.
-	public static function getAllStudents() {
-		$allTAs = array();
+	// Return an array of User objects of all the Driverss in the database.
+	public static function getAllDrivers() {
+		$allDispatchers = array();
 		$db = DB::getInstance();
-		$ta_rows = $db->prep_execute('SELECT email FROM users WHERE isStudent = 1;', array());
-		foreach( $ta_rows as $row ) {
-			$allTAs[] = USER::fromDatabase($row['email']);
+		$Dispatcher_rows = $db->prep_execute('SELECT email FROM users WHERE isDriver = 1;', array());
+		foreach( $Dispatcher_rows as $row ) {
+			$allDispatchers[] = USER::fromDatabase($row['email']);
 		}
-		return $allTAs;
+		return $allDispatchers;
 	}
 	
-	// Return an array of User objects of all the TAs in the database.
-	public static function getAllTAs() {
-		$allTAs = array();
+	// Return an array of User objects of all the Dispatchers in the database.
+	public static function getAllDispatchers() {
+		$allDispatchers = array();
 		$db = DB::getInstance();
-		$ta_rows = $db->prep_execute('SELECT email FROM users WHERE isTA = 1;', array());
-		foreach( $ta_rows as $row ) {
-			$allTAs[] = USER::fromDatabase($row['email']);
+		$Dispatcher_rows = $db->prep_execute('SELECT email FROM users WHERE isDispatcher = 1;', array());
+		foreach( $Dispatcher_rows as $row ) {
+			$allDispatchers[] = USER::fromDatabase($row['email']);
 		}
-		return $allTAs;
+		return $allDispatchers;
 	}
 	
 	// Removes user with unique id from database

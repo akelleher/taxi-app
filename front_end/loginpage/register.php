@@ -10,14 +10,14 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 		header( 'Location: ' . SITE_URL . '/front_end/Admin.php' ) ;
 	}
 
-	$t = $_SESSION['user']->getIsTA();
+	$t = $_SESSION['user']->getIsDispatcher();
 	if ($t == true) {
-		header( 'Location: ' . SITE_URL . '/front_end/TA.php' ) ;
+		header( 'Location: ' . SITE_URL . '/front_end/Dispatcher.php' ) ;
 	}
 
-	$t = $_SESSION['user']->getIsStudent();
+	$t = $_SESSION['user']->getIsDriver();
 	if ($t == true) {
-		header( 'Location: ' . SITE_URL . '/front_end/student.php') ;
+		header( 'Location: ' . SITE_URL . '/front_end/Driver.php') ;
 	}
 }
 ?>
@@ -66,8 +66,8 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 					</label>
 					<section id="chkbox">
 						Are you a:
-						<input type="checkbox" id="isStudent" value="student"> <span class="checkbox">Driver</span>
-  						<input type="checkbox" id="isTA" value="TA"><span class="checkbox">Dispatcher</span>
+						<input type="checkbox" id="isDriver" value="Driver"> <span class="checkbox">Driver</span>
+  						<input type="checkbox" id="isDispatcher" value="Dispatcher"><span class="checkbox">Dispatcher</span>
   						<input type="checkbox" id="isTutor" value="tutor"><span class="checkbox">Admin</span>
   					</section>
 				
@@ -101,15 +101,15 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 				var email = $('#email').val();
 				var password = $('#password').val();
 				var confirm_password = $('#confirm_password').val();
-				var isTA = $('#isTA').is(':checked');
-				var isStudent = $('#isStudent').is(':checked');
+				var isDispatcher = $('#isDispatcher').is(':checked');
+				var isDriver = $('#isDriver').is(':checked');
 				var isTutor = $('#isTutor').is(':checked');
-				//console.log ('checkboxes ' + isStudent + isTA + isTutor);
+				//console.log ('checkboxes ' + isDriver + isDispatcher + isTutor);
 
 				$('input').removeClass('error');
 				$('#login_error').empty();
 
-				if (!name || !email || !password || (isTA || isStudent || isTutor) === false) {
+				if (!name || !email || !password || (isDispatcher || isDriver || isTutor) === false) {
 					//highlight fields that aren't completed
 					if (!name) {
 						$('#name').addClass('error');
@@ -123,9 +123,9 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 					if (!confirm_password) {
 						$('#confirm_password').addClass('error');
 					}
-					if ((isTA || isStudent || isTutor)===false) {
+					if ((isDispatcher || isDriver || isTutor)===false) {
 						$('#chkbox').addClass('error');
-						$('#login_error').html("Please select whether you are a student, TA, or tutor");
+						$('#login_error').html("Please select whether you are a Driver, Dispatcher, or tutor");
 					}
 					$('#login_error').html("Field(s) blank");
 					error = true;
@@ -163,7 +163,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 
 					$.ajax({
 		                url: "validate_login.php",
-		                data: { 'register': '1', 'firstName': first_name, 'lastName': last_name, 'email': email, 'password': password, 'isTA': isTA, 'isStudent':isStudent, 'isTutor' : isTutor},
+		                data: { 'register': '1', 'firstName': first_name, 'lastName': last_name, 'email': email, 'password': password, 'isDispatcher': isDispatcher, 'isDriver':isDriver, 'isTutor' : isTutor},
 		                method: 'POST',
 		                success: function (data) {
 		                    data = $.trim(data);
@@ -180,11 +180,11 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 							if (data === "2") { 
 		                    	console.log("login successful");
 		           
-								if (isTA) {
-									 document.location.href = '<?php echo SITE_URL; ?>/front_end/TA.php';
+								if (isDispatcher) {
+									 document.location.href = '<?php echo SITE_URL; ?>/front_end/Dispatcher.php';
 								}
-								if (isStudent) {
-									 document.location.href = '<?php echo SITE_URL; ?>/front_end/student.php';
+								if (isDriver) {
+									 document.location.href = '<?php echo SITE_URL; ?>/front_end/Driver.php';
 								}
 		                        
 		                    }

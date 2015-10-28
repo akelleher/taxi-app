@@ -7,10 +7,10 @@ require_once(SITE_ROOT . '\PHP\Course.php');
 $users = array();
 $courses = array();
 
-function getAllStudentsCourses() {
-	// Get student - course key mappings
+function getAllDriversCourses() {
+	// Get Driver - course key mappings
 	$db = DB::getInstance();
-	$students_courses = $db->prep_execute('SELECT * FROM students_courses;', array());
+	$Drivers_courses = $db->prep_execute('SELECT * FROM Drivers_courses;', array());
 	
 	// Global list of user & course objects. Prevents unnecessary DB reads.
 	global $users, $courses;
@@ -18,8 +18,8 @@ function getAllStudentsCourses() {
 	// Array of user - course object pair mappings to be returned.
 	$return = array();
 	
-	// Loop through all student - course key mappings
-	foreach( $students_courses as $row ) {
+	// Loop through all Driver - course key mappings
+	foreach( $Drivers_courses as $row ) {
 		// Read user from DB and add to user array if not found in array
 		if( !isset($users[$row['email']]) ) {
 			$users[$row['email']] = USER::fromDatabase($row['email']);
@@ -30,7 +30,7 @@ function getAllStudentsCourses() {
 			$courses[$row['subj'] . '-' . $row['crse']] = COURSE::fromDatabase( $row['subj'], intval($row['crse']) );
 		}
 
-		// Add student - course object pair to return array
+		// Add Driver - course object pair to return array
 		$return[] = [
 			'user' => $users[$row['email']],
 			'course' => $courses[$row['subj'] . '-' . $row['crse']]
@@ -40,10 +40,10 @@ function getAllStudentsCourses() {
 	return $return;
 }
 
-function getAllTAsCourses() {
-	// Get student - course key mappings
+function getAllDispatchersCourses() {
+	// Get Driver - course key mappings
 	$db = DB::getInstance();
-	$tas_courses = $db->prep_execute('SELECT * FROM tas_courses;', array());
+	$Dispatchers_courses = $db->prep_execute('SELECT * FROM Dispatchers_courses;', array());
 	
 	// Global list of user & course objects. Prevents unnecessary DB reads.
 	global $users, $courses;
@@ -51,8 +51,8 @@ function getAllTAsCourses() {
 	// Array of user - course object pair mappings to be returned.
 	$return = array();
 	
-	// Loop through all student - course key mappings
-	foreach( $tas_courses as $row ) {
+	// Loop through all Driver - course key mappings
+	foreach( $Dispatchers_courses as $row ) {
 		// Read user from DB and add to user array if not found in array
 		if( !isset($users[$row['email']]) ) {
 			$users[$row['email']] = USER::fromDatabase($row['email']);
@@ -63,7 +63,7 @@ function getAllTAsCourses() {
 			$courses[$row['subj'] . '-' . $row['crse']] = COURSE::fromDatabase( $row['subj'], intval($row['crse']) );
 		}
 
-		// Add student - course object pair to return array
+		// Add Driver - course object pair to return array
 		$return[] = [
 			'user' => $users[$row['email']],
 			'course' => $courses[$row['subj'] . '-' . $row['crse']]
@@ -73,9 +73,9 @@ function getAllTAsCourses() {
 	return $return;
 }
 
-function getAllTAOfficeHours() {
+function getAllDispatcherOfficeHours() {
 	$db = DB::getInstance();
-	$ta_hours = $db->prep_execute('SELECT * FROM ta_hours;', array());
+	$Dispatcher_hours = $db->prep_execute('SELECT * FROM Dispatcher_hours;', array());
 	
 	// Global list of user & course objects. Prevents unnecessary DB reads.
 	global $users, $courses;
@@ -83,8 +83,8 @@ function getAllTAOfficeHours() {
 	// Array of user - course object pair mappings to be returned.
 	$return = array();
 	
-	// Loop through all student - course key mappings
-	foreach( $ta_hours as $row ) {
+	// Loop through all Driver - course key mappings
+	foreach( $Dispatcher_hours as $row ) {
 		// Read user from DB and add to user array if not found in array
 		if( !isset($users[$row['email']]) ) {
 			$users[$row['email']] = USER::fromDatabase($row['email']);
@@ -95,7 +95,7 @@ function getAllTAOfficeHours() {
 			$courses[$row['subj'] . '-' . $row['crse']] = COURSE::fromDatabase( $row['subj'], intval($row['crse']) );
 		}
 
-		// Add student - course object pair to return array
+		// Add Driver - course object pair to return array
 		$return[] = [
 			'user' => $users[$row['email']],
 			'course' => $courses[$row['subj'] . '-' . $row['crse']],
