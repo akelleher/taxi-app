@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="map.css">
+
+    <script>
+		function initialize()
+		{
+			var position = new google.maps.LatLng(56.7524805, -111.4282751);
+			var map_canvas = document.getElementById('map_canvas');
+			var map_options =
+			{
+			  center: new google.maps.LatLng(56.75309, -111.42845),
+			  zoom: 10,
+			  mapTypeId: google.maps.MapTypeId.ROADMAP
+			}
+			var map = new google.maps.Map(map_canvas, map_options)
+			var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        title:"Inah Nail Art Salon Ltd."
+    });
+		}
+		google.maps.event.addDomListener(window, 'load', initialize);
+		</script>
+  </head>
+  <body>
+    <div id="map_canvas">
+      <div class = "row vertical-align">
+        <div class = "col-xs-12 col-sm-9">
+          <center>
+          </center>
+        </div>
+        <div class = "col-xs-0 col-sm-3">
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
