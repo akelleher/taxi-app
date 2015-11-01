@@ -2,8 +2,8 @@
 <?php
 	
 	require(dirname(dirname(dirname(__FILE__))) . '/config.php');
-	require(SITE_ROOT . '\PHP\DB.php');
-	require(SITE_ROOT . '\PHP\User.php');
+	require(SITE_ROOT . '/PHP/DB.php');
+	require(SITE_ROOT . '/PHP/User.php');
 
 
 	try {

@@ -28,12 +28,12 @@ CREATE TABLE courses(
 	PRIMARY KEY(subj, crse)
 );
 
-DROP TABLE IF EXISTS Passwords;
-CREATE TABLE Passwords(
+DROP TABLE IF EXISTS passwords;
+CREATE TABLE passwords(
 	email VARCHAR(255) NOT NULL,
 	password VARCHAR(255),
 	PRIMARY KEY(email),
-	FOREIGN KEY(email) REFERENCES Users(email)
+	FOREIGN KEY(email) REFERENCES users(email)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE
 );
