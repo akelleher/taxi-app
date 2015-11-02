@@ -21,12 +21,17 @@ html, body
 	padding: 0;
 	font-size: 16px;
 }
+.form-control
+{
+	float:left;
+}
 .form-group
 {
 	margin-top:50px;
 }
 .label-align
 {
+	margin-top: 10px;
 	float:left;
 	font-size:18px;
 }
@@ -36,6 +41,7 @@ html, body
 }
 .submit-align
 {
+	margin-top: 20px;
 	float:right;
 	margin-right:25px;
 	width:20%;
