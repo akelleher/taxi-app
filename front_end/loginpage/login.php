@@ -39,8 +39,8 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Taxiping Login Page">
 
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="login.css">
@@ -130,7 +130,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
                     console.log("login successful")
                     //console.log(<?php echo SITE_URL; ?>)
                     document.location.href = '<?php echo SITE_URL; ?>/front_end/' + data;
-                    
+
                 }
             },
             error: function ()
