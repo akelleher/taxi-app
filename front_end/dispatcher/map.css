@@ -1,0 +1,22 @@
+html, body, #mapCanvas
+{
+  overflow-x:hidden;
+	margin:0;
+	padding:0;
+	height:100%;
+}
+
+#mapCanvas
+{
+	width: 100%;
+  position:absolute;
+}
+#addressBar
+{
+  width: 30%;
+  float: right;
+  margin-right: 30px;
+  margin-top: 10px;
+  position:relative;
+  text-overflow: ellipsis;
+}
