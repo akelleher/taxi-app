@@ -7,7 +7,7 @@ html, body
 {
 	height:100%;
 }
-#login
+#login, #changePass
 {
 	background-color:#F2F2F2;
 	border-radius:15px;
@@ -20,6 +20,15 @@ html, body
 	color: red;
 	padding: 0;
 	font-size: 16px;
+}
+#header
+{
+	margin-top:10px;
+}
+#name
+{
+	color:white;
+	float:right;
 }
 .form-control
 {

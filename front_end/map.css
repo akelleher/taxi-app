@@ -1,0 +1,39 @@
+html, body, #mapCanvas
+{
+  overflow-x:hidden;
+	margin:0;
+	padding:0;
+	height:100%;
+}
+
+#mapCanvas
+{
+	width: 100%;
+  position:absolute;
+}
+#topRight
+{
+  margin-top:10px;
+  float:right;
+  position:relative;
+  width: 50%;
+}
+#addressBar
+{
+  margin-right: 15px;
+  float:right;
+  width: 65%;
+  text-overflow: ellipsis;
+}
+#logout
+{
+  float:right;
+  margin-right: 15px;
+  color:white;
+}
+#name
+{
+  float:right;
+  margin-right:15px;
+  color:white;
+}

@@ -9,7 +9,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
     $t = $_SESSION['user']->getIsfirstTime();
 	if ($t == true)
 	{
-		header( 'Location: ' . SITE_URL . '/front_end/loginpage/register.php') ;
+		header( 'Location: ' . SITE_URL . '/front_end/loginpage/change_password.php') ;
 	}
 	$t = $_SESSION['user']->getIsAdmin();
 	if ($t == true)
