@@ -7,10 +7,9 @@ session_start();
 if( isset($_SESSION) && isset($_SESSION['user']) )
 {
     $t = $_SESSION['user']->getIsfirstTime();
-	
-    if ($t == true)
+	if ($t == true)
 	{
-		header( 'Location: ' . SITE_URL . '/front_end/loginpage/register.php') ;
+		header( 'Location: ' . SITE_URL . '/front_end/loginpage/change_password.php') ;
 	}
 	$t = $_SESSION['user']->getIsAdmin();
 	if ($t == true)
@@ -40,8 +39,8 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Taxiping Login Page">
 
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="login.css">
@@ -63,7 +62,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
                   <label for = "pwd" class = "label-align">Password:</label>
                   <input type = "password" class = "form-control" id = "pass" placeholder="Password">
                 </div>
-                <a class="btn btn-link link-align" href="forgot_password.php" id="forgotPassword">Forgot Password</a>
+                <button type="button" class="btn btn-link link-align" href="forgot_password.html" id="forgotPassword">Forgot Password</button>
                 <button type="submit" class="btn btn-lg btn-default submit-align">Login</button>
               </form>
             </div>
@@ -131,7 +130,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
                     console.log("login successful")
                     //console.log(<?php echo SITE_URL; ?>)
                     document.location.href = '<?php echo SITE_URL; ?>/front_end/' + data;
-                    
+
                 }
             },
             error: function ()

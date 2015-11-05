@@ -15,11 +15,27 @@ if( isset($_POST['form']) ) {
 	switch ($_POST['form']) {
 		case 'AddUser':
 			try {
-				$admin = ($_POST['admin'] === 'on') ? true : false;
-				$Driver = ($_POST['Driver'] === 'on') ? true : false;
-				$Dispatcher = ($_POST['Dispatcher'] === 'on') ? true : false;  //temporary removed
-				$firstTime = ($_POST['firstTime'] === 'on') ? true : false;
-				if( USER::withValues($_POST['email'], $_POST['password'], $Driver, $Dispatcher, $firstTime, $admin, $_POST['firstname'], $_POST['lastname'])->getInDB() ) {
+				if (isset($_POST['admin']))
+					$admin = true;
+				else
+					$admin = false;
+				
+				if (isset($_POST['Driver']))
+					$Driver = true;
+				else
+					$Driver = false;
+				
+				if (isset($_POST['Dispatcher']))
+					$Dispatcher = true;
+				else
+					$Dispatcher = false;
+				
+				if (isset($_POST['firstTime']))
+					$firstTime = true;
+				else
+					$firstTime = false;
+				
+				if( USER::withValues($_POST['email'], $_POST['password'], $Driver, $Dispatcher, $firstTime, $admin, $_POST['firstname'], $_POST['lastname'])) {
 					$message = 'Success!';
 					$message_class = 'success';
 				}
@@ -80,7 +96,7 @@ if( isset($_POST['form']) ) {
 			<?php echo $message ?>
 		</section>
 		<section class="courses">
-			<form id="AddUser" action="#" method="POST">
+			<form id="AddUser" action="" method="POST">
 				<h2>Add a User</h2>
 				<input type="hidden" name="form" value="AddUser" />
 				<div class="input_block">
