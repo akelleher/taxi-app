@@ -4,6 +4,7 @@ require_once(SITE_ROOT . '/PHP/User.php');
 require_once(SITE_ROOT . '/PHP/Course.php');
 
 session_start();
+<<<<<<< HEAD
 if( isset($_SESSION) && isset($_SESSION['user']) )
 {
     $t = $_SESSION['user']->getIsfirstTime();
@@ -12,21 +13,29 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
 	{
 		header( 'Location: ' . SITE_URL . '/front_end/loginpage/register.php') ;
 	}
+=======
+//Check user privilege level
+if( isset($_SESSION) && isset($_SESSION['user']) ){ 
+  //Check if first time logging in - send to set password page
+  $t = $_SESSION['user']->getIsfirstTime();
+
+  if ($t == true) {
+	  header( 'Location: ' . SITE_URL . '/front_end/loginpage/register.php') ;
+  }
+
+>>>>>>> stakeHolder1
 	$t = $_SESSION['user']->getIsAdmin();
-	if ($t == true)
-	{
+	if ($t == true) {
 		header( 'Location: ' . SITE_URL . '/front_end/Admin.php' ) ;
 	}
 
 	$t = $_SESSION['user']->getIsDispatcher();
-	if ($t == true)
-	{
+	if ($t == true) {
 		header( 'Location: ' . SITE_URL . '/front_end/Dispatcher.php' ) ;
 	}
 
 	$t = $_SESSION['user']->getIsDriver();
-	if ($t == true)
-	{
+	if ($t == true) {
 		header( 'Location: ' . SITE_URL . '/front_end/Driver.php') ;
 	}
 }
@@ -79,8 +88,8 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
 	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 	<script type="text/javascript">
 		//move to seperate js later
-		$('.loginForm').submit(function (event)
-		{
+    //Validate login
+		$('.loginForm').submit(function (event) {
 			event.preventDefault();
 			console.log("logging in...");
 			var user = $('#email').val();
@@ -89,53 +98,46 @@ if( isset($_SESSION) && isset($_SESSION['user']) )
 			$('input').removeClass('error');
 			$('#login_error').empty();
 
-			if (!user || !pass)
-			{
+			if (!user || !pass) {
 				//highlight fields that aren't completed
-				if (!user)
-				{
+				if (!user) {
 					$('#email').addClass('error');
 				}
-				if (!pass)
-				{
+				if (!pass) {
 					$('#pass').addClass('error');
 				}
 				$('#login_error').html("Field(s) blank");
 				console.log("error");
 			}
-			else
-			{
+			else {
 				$.ajax(
 					{
+            //call validation logic
             url: "<?php echo SITE_URL; ?>/front_end/loginpage/validate_login.php",
             data: { 'login': '1', 'user': user, 'pass': pass },
             method: 'POST',
-            success: function (data)
-						{
+            success: function (data) {
                 data = $.trim(data);
                 console.log("data: " + data);
 
                 /*
-                  data is codes sent by validate_login.php
+                  data is code sent by validate_login.php
                   1 is success
                   0 is login error
                 */
 
-                if (data === "0")
-								{
+                if (data === "0") {
                 	console.log("can't log in");
                   $('#login_error').html("User name and/or password invalid");
                 }
-                else
-                {
+                else {
                     console.log("login successful")
                     //console.log(<?php echo SITE_URL; ?>)
                     document.location.href = '<?php echo SITE_URL; ?>/front_end/' + data;
                     
                 }
             },
-            error: function ()
-						{
+            error: function () {
                 console.log("error");
             }
         	});

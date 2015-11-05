@@ -18,7 +18,11 @@
 				$password = $_POST['pass'];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 				
+=======
+				//load user from database and direct to proper page
+>>>>>>> stakeHolder1
 =======
 				//load user from database and direct to proper page
 >>>>>>> stakeHolder1
@@ -37,8 +41,11 @@
 						}
                         elseif( $user->getIsAdmin() ) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 							echo 'admin.php';
 =======
+=======
+>>>>>>> stakeHolder1
 							echo 'Admin.php';
 >>>>>>> stakeHolder1
 						}

@@ -5,6 +5,10 @@ require_once(SITE_ROOT . '/PHP/Course.php');
 
 session_start();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+//If user's first time logging in, force them to set a password
+>>>>>>> stakeHolder1
 =======
 //If user's first time logging in, force them to set a password
 >>>>>>> stakeHolder1
