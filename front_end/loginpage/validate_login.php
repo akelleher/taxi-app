@@ -32,7 +32,7 @@
 							echo 'loginpage/register.php';
 						}
                         elseif( $user->getIsAdmin() ) {
-							echo 'admin.php';
+							echo 'Admin.php';
 						}
 						elseif( $user->getIsDriver() ) {
 							echo 'Driver.php';
