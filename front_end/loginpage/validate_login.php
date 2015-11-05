@@ -17,7 +17,11 @@
 				$username = $_POST['user'];
 				$password = $_POST['pass'];
 
+<<<<<<< HEAD
 				
+=======
+				//load user from database and direct to proper page
+>>>>>>> stakeHolder1
 				$user = User::fromDatabase($username);
 				if ($user) {
 					if ($user->login($password)) {
@@ -32,7 +36,11 @@
 							echo 'loginpage/register.php';
 						}
                         elseif( $user->getIsAdmin() ) {
+<<<<<<< HEAD
 							echo 'admin.php';
+=======
+							echo 'Admin.php';
+>>>>>>> stakeHolder1
 						}
 						elseif( $user->getIsDriver() ) {
 							echo 'Driver.php';

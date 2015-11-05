@@ -4,6 +4,10 @@ require_once(SITE_ROOT . '/PHP/User.php');
 require_once(SITE_ROOT . '/PHP/Course.php');
 
 session_start();
+<<<<<<< HEAD
+=======
+//If user's first time logging in, force them to set a password
+>>>>>>> stakeHolder1
 if( isset($_SESSION) && isset($_SESSION['user']) ) {
 	
 	$s = $_SESSION['user']->getIsfirstTime();
@@ -119,6 +123,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 
 				$('input').removeClass('error');
 				$('#login_error').empty();
+				
 
 				if (!name || !email || !password || (isDispatcher || isDriver || isTutor) === false) {
 					//highlight fields that aren't completed
