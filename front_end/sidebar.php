@@ -47,6 +47,6 @@ if( isset($_POST['form']) ) {
 	<!--link to ALAC website-->
 	<section >
 		<h2>Official Website</h2>
-		<a href="http://www.meangirls.com/">Click to go to company's official website</a>
+		<a href="http://www.google.com/">Click to go to company's official website</a>
 	</section>
 </aside>

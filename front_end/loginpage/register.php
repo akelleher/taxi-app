@@ -4,21 +4,33 @@ require_once(SITE_ROOT . '/PHP/User.php');
 require_once(SITE_ROOT . '/PHP/Course.php');
 
 session_start();
-if( isset($_SESSION) && isset($_SESSION['user']) ) {	
+//If user's first time logging in, force them to set a password
+if( isset($_SESSION) && isset($_SESSION['user']) ) {
+	
+	$s = $_SESSION['user']->getIsfirstTime();
+	
 	$t = $_SESSION['user']->getIsAdmin();
-	if ($t == true) {
+	if (($t == true) && ($s == true)){
+		header( 'Location: ' . SITE_URL . '/front_end/loginpage/change_password.php') ;
+	}elseif ($t == true) {
 		header( 'Location: ' . SITE_URL . '/front_end/Admin.php' ) ;
 	}
 
 	$t = $_SESSION['user']->getIsDispatcher();
-	if ($t == true) {
+	if (($t == true) && ($s == true)){
+		header( 'Location: ' . SITE_URL . '/front_end/loginpage/change_password.php') ;
+	}elseif ($t == true) {
 		header( 'Location: ' . SITE_URL . '/front_end/Dispatcher.php' ) ;
 	}
 
 	$t = $_SESSION['user']->getIsDriver();
-	if ($t == true) {
+	
+	if (($t == true) && ($s == true)){
+		header( 'Location: ' . SITE_URL . '/front_end/loginpage/change_password.php') ;
+	}elseif($t == true){
 		header( 'Location: ' . SITE_URL . '/front_end/Driver.php') ;
 	}
+	
 }
 ?>
 <!DOCTYPE html>
@@ -108,6 +120,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) ) {
 
 				$('input').removeClass('error');
 				$('#login_error').empty();
+				
 
 				if (!name || !email || !password || (isDispatcher || isDriver || isTutor) === false) {
 					//highlight fields that aren't completed

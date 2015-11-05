@@ -1,0 +1,5 @@
+Once you are done installing the database, copy and paste the following code into your table:
+ALTER TABLE `passwords` ADD `secrate_key` VARCHAR(20) NOT NULL AFTER `password`;
+----------------------------------------------------------------------------------------------
+Also, copy and paste the folder sk into your htdocs (in XAMPP) or www (in WAMPP), 
+do not remove the files from the folder sk

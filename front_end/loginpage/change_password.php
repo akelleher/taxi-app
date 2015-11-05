@@ -1,4 +1,6 @@
 <script type="text/javascript">
+
+//Check if passwords match
   function myFunction() {
 	  var pass = document.getElementById("pass").value;
     var confirm = document.getElementById("confirm").value;
@@ -16,6 +18,8 @@
     return ok;
 }
 </script>
+
+
 <?php
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once(SITE_ROOT . '/PHP/User.php');

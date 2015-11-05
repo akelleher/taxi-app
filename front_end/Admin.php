@@ -10,16 +10,37 @@ $courses = COURSE::getAllCourses();
 
 $message = '';
 $message_class = 'hidden';
+/*
+	Determines what is input into the form and creates
+	a new user, upon success, the user will be created
+	and success will be written on the screen
 
+	The second part of the case is if a user is deleted
+	upon success, the user will be removed from the database
+	and success will be written on the screen
+*/
 if( isset($_POST['form']) ) {
 	switch ($_POST['form']) {
 		case 'AddUser':
 			try {
-				$admin = ($_POST['admin'] === 'on') ? true : false;
-				$Driver = ($_POST['Driver'] === 'on') ? true : false;
-				$Dispatcher = ($_POST['Dispatcher'] === 'on') ? true : false;  //temporary removed
-				$firstTime = ($_POST['firstTime'] === 'on') ? true : false;
-				if( USER::withValues($_POST['email'], $_POST['password'], $Driver, $Dispatcher, $firstTime, $admin, $_POST['firstname'], $_POST['lastname'])->getInDB() ) {
+				if (isset($_POST['admin']))
+					$admin = true;
+				else
+					$admin = false;
+				if (isset($_POST['Driver']))
+					$Driver = true;
+				else
+					$Driver = false;
+				if (isset($_POST['Dispatcher']))
+					$Dispatcher = true;
+				else
+					$Dispatcher = false;
+				if (isset($_POST['firstTime']))
+					$firstTime = true;
+				else
+					$firstTime = false;
+
+				if( USER::withValues($_POST['email'], $_POST['password'], $Driver, $Dispatcher, $firstTime, $admin, $_POST['firstname'], $_POST['lastname'])) {
 					$message = 'Success!';
 					$message_class = 'success';
 				}
@@ -61,7 +82,7 @@ if( isset($_POST['form']) ) {
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front+end/resources/better-timeinput-polyfill.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front_end/resources/user.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>/front_end/resources/admin.css">
-	
+
 	<!--[if lt IE 9]>
 	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -70,9 +91,9 @@ if( isset($_POST['form']) ) {
 	<div class="wrapper">
 		<?php	$firstname = $_SESSION['user']->getFirstName();
 						$lastname = $_SESSION['user']->getLastName();
-						echo "<div id= 'namesize' align='right'> Welcome " . $firstname . " " . $lastname . " </div>";	
+						echo "<div id= 'namesize' align='right'> Welcome " . $firstname . " " . $lastname . " </div>";
 					?>
-		<div id="upperright"> 
+		<div id="upperright">
 			<a href="logout.php">Logout</a>
 		</div>
 		<?php include(SITE_ROOT . '/front_end/header.php') ?>
@@ -80,7 +101,7 @@ if( isset($_POST['form']) ) {
 			<?php echo $message ?>
 		</section>
 		<section class="courses">
-			<form id="AddUser" action="#" method="POST">
+			<form id="AddUser" action="" method="POST">
 				<h2>Add a User</h2>
 				<input type="hidden" name="form" value="AddUser" />
 				<div class="input_block">

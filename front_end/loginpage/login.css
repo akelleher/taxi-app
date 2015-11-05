@@ -1,63 +1,51 @@
-html, body
-{
+html, body {
 	background-image:url("images/login_background.png");
 	height:100%;
 }
-#outer_container
-{
+#outer_container {
 	height:100%;
 }
-#login, #changePass
-{
+#login, #changePass {
 	background-color:#F2F2F2;
 	border-radius:15px;
 	height: 350px;
 	width:100%;
 	padding: 5%;
 }
-#login_error
-{
+#login_error {
 	color: red;
 	padding: 0;
 	font-size: 16px;
 }
-#header
-{
+#header {
 	margin-top:10px;
 }
-#name
-{
+#name {
 	color:white;
 	float:right;
 }
-.form-control
-{
+.form-control {
 	float:left;
 }
-.form-group
-{
+.form-group {
 	margin-top:50px;
 }
-.label-align
-{
+.label-align {
 	margin-top: 10px;
 	float:left;
 	font-size:18px;
 }
-.link-align
-{
+.link-align {
 	float:left;
 }
-.submit-align
-{
+.submit-align {
 	margin-top: 20px;
 	float:right;
 	margin-right:25px;
 	width:20%;
 	min-width:100px;
 }
-.vertical-align
-{
+.vertical-align {
  min-height: 100%;  /* Fallback for vh unit */
  min-height: 100vh;
  display: -webkit-box;
