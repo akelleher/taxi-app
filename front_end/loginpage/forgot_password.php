@@ -1,8 +1,5 @@
 <script type="text/javascript">
-<<<<<<< HEAD
-=======
 
->>>>>>> stakeHolder1
   function myFunction() {
 	var email = document.getElementById("pass").value;
     var ok = true;
@@ -16,10 +13,7 @@
     return ok;
 }
 </script>
-<<<<<<< HEAD
-=======
 
->>>>>>> stakeHolder1
 <?php
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once(SITE_ROOT . '/PHP/User.php');
@@ -28,10 +22,7 @@ require_once(SITE_ROOT . '/PHP/User.php');
 $message = '';
 $message_class = 'hidden';
 
-<<<<<<< HEAD
-=======
 //Forgot password logic
->>>>>>> stakeHolder1
 if( isset($_POST['form']) ) {
 	
 	switch ($_POST['form']) {
@@ -39,11 +30,7 @@ if( isset($_POST['form']) ) {
 			try {
 				
 				if(USER::forgot_pass($_POST['email'], USER::get_random_string())) {
-<<<<<<< HEAD
-					
-=======
 					//Email random new password to user
->>>>>>> stakeHolder1
 					header( 'Location: ' . SITE_URL . '/front_end/loginpage/new_password.php?email='.$_POST['email'] );
 					
 					$message = 'Success!';

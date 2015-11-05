@@ -4,14 +4,7 @@ require_once(SITE_ROOT . '/PHP/User.php');
 require_once(SITE_ROOT . '/PHP/Course.php');
 
 session_start();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 //If user's first time logging in, force them to set a password
->>>>>>> stakeHolder1
-=======
-//If user's first time logging in, force them to set a password
->>>>>>> stakeHolder1
 if( isset($_SESSION) && isset($_SESSION['user']) ) {
 	
 	$s = $_SESSION['user']->getIsfirstTime();

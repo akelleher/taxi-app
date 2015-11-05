@@ -4,16 +4,6 @@ require_once(SITE_ROOT . '/PHP/User.php');
 require_once(SITE_ROOT . '/PHP/Course.php');
 
 session_start();
-<<<<<<< HEAD
-if( isset($_SESSION) && isset($_SESSION['user']) )
-{
-    $t = $_SESSION['user']->getIsfirstTime();
-	
-    if ($t == true)
-	{
-		header( 'Location: ' . SITE_URL . '/front_end/loginpage/register.php') ;
-	}
-=======
 //Check user privilege level
 if( isset($_SESSION) && isset($_SESSION['user']) ){ 
   //Check if first time logging in - send to set password page
@@ -23,7 +13,6 @@ if( isset($_SESSION) && isset($_SESSION['user']) ){
 	  header( 'Location: ' . SITE_URL . '/front_end/loginpage/register.php') ;
   }
 
->>>>>>> stakeHolder1
 	$t = $_SESSION['user']->getIsAdmin();
 	if ($t == true) {
 		header( 'Location: ' . SITE_URL . '/front_end/Admin.php' ) ;

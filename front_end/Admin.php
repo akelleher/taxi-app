@@ -27,35 +27,19 @@ if( isset($_POST['form']) ) {
 					$admin = true;
 				else
 					$admin = false;
-<<<<<<< HEAD
-				
-=======
->>>>>>> stakeHolder1
 				if (isset($_POST['Driver']))
 					$Driver = true;
 				else
 					$Driver = false;
-<<<<<<< HEAD
-				
-=======
->>>>>>> stakeHolder1
 				if (isset($_POST['Dispatcher']))
 					$Dispatcher = true;
 				else
 					$Dispatcher = false;
-<<<<<<< HEAD
-				
-=======
->>>>>>> stakeHolder1
 				if (isset($_POST['firstTime']))
 					$firstTime = true;
 				else
 					$firstTime = false;
-<<<<<<< HEAD
-				
-=======
 
->>>>>>> stakeHolder1
 				if( USER::withValues($_POST['email'], $_POST['password'], $Driver, $Dispatcher, $firstTime, $admin, $_POST['firstname'], $_POST['lastname'])) {
 					$message = 'Success!';
 					$message_class = 'success';
