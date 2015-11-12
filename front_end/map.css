@@ -25,6 +25,14 @@ html, body, #mapCanvas
   width: 65%;
   text-overflow: ellipsis;
 }
+#driverAddressBar
+{
+  width:95%;
+  text-overflow: ellipsis;
+  position:relative;
+  height: 50px;
+  margin-top: 5px;
+}
 #logout
 {
   float:right;
@@ -36,4 +44,19 @@ html, body, #mapCanvas
   float:right;
   margin-right:15px;
   color:white;
+}
+#bottom
+{
+  position:fixed;
+  bottom:0px;
+  height:35%;
+  width:100%;
+  background-image:url("loginpage/images/login_background.png");
+}
+.bottomButton
+{
+  height: 30%;
+  margin-top:5px;
+  width: 95%;
+  background-color:white;
 }
