@@ -209,15 +209,44 @@ class User {
 		}
 		return $token;
 	}
+
 	public function generateRandomString($length = 10) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
-    }
-    return $randomString;
-}
+    	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	    $charactersLength = strlen($characters);
+	    $randomString = '';
+	    for ($i = 0; $i < $length; $i++) {
+	        $randomString .= $characters[rand(0, $charactersLength - 1)];
+	    }
+	    return $randomString;
+	}
+
+	public static function reset_password_update($sec_key, $password ){
+		
+		$db = DB::getInstance();
+		
+		$pstmt = "UPDATE passwords SET password=:password, secrate_key = '' WHERE secrate_key=:secrate_key";
+		
+		$pstmt_array[] = $pstmt;
+		
+		
+		try{
+			
+			$results = $db->multi_prep_execute( $pstmt_array, array(
+				[
+					':secrate_key' => $sec_key,
+					':password' => password_hash( $password, PASSWORD_DEFAULT )
+				]
+			));
+		}
+		catch( PDOException $e ) {
+			//echo $e->getMessage();
+			//exit;
+			return false;
+		}
+		
+		return $results;
+	}
+
 	// ########################## ACCESSOR FUNCTIONS ###########################
 	
 	// Returns whether the password matches the password hash when hashed.
