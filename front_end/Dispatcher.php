@@ -31,6 +31,7 @@ require(SITE_ROOT . '/PHP/relations.php');
       var currentTaxiMarkers = []
       ws.onmessage = function(evt) {
         var recv_msg = evt.data;
+        console.log(recv_msg)
         var jobj = JSON.parse(recv_msg);
         if (jobj.type === "driver_coordination")
         {
@@ -138,7 +139,7 @@ require(SITE_ROOT . '/PHP/relations.php');
           "<note>" + $('#message').val() + "</note>" +
           "</notify>";
       //alert(data);
-
+      console.log(data)
       ws.send(data);
     });
   </script>
