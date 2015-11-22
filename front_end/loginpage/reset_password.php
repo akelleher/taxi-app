@@ -24,7 +24,6 @@ $message = '';
 $message_class = 'hidden';
 
 if( isset($_POST['form']) ) {
-	
 	switch ($_POST['form']) {
 		case 'PasswordChange':
 			try {
