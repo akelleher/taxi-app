@@ -20,7 +20,6 @@ require(SITE_ROOT . '/PHP/relations.php');
 
     <script type="text/javascript" src="map.js"></script>
     <script>
-
       // start a websocket
       // IP address: a random remote host for testing. gonna move it to our server next week
       // port number: 8787
@@ -28,34 +27,62 @@ require(SITE_ROOT . '/PHP/relations.php');
       ws = new WebSocket( url );
       // websocket is event-driven
       // define the behavior when receiving message
+      var selectedEmail = ""
       var currentTaxiMarkers = []
       ws.onmessage = function(evt) {
         var recv_msg = evt.data;
         var jobj = JSON.parse(recv_msg);
-        var index = -1;
-        for (i = 0; i < currentTaxiMarkers.length; i++)
+        if (jobj.type === "driver_coordination")
         {
-          if (currentTaxiMarkers[i][1].email === jobj.email)
+          var index = -1;
+          var found = false;
+          for (i = 0; i < currentTaxiMarkers.length; i++)
           {
-              currentTaxiMarkers[i][0].setMap(null);
-              index = i;
+            if (currentTaxiMarkers[i][1].email === jobj.email){
+                for (j = 0; j < distances.length; j++){
+                  if (distances[j][1] === i){
+                    found = true
+                    break
+                  }
+                }
+                if (found === false){
+                  currentTaxiMarkers[i][0].setMap(null);
+                }
+                index = i;
+                break
+            }
           }
-        }
-        var latlng = {lat: parseFloat(jobj.la), lng: parseFloat(jobj.lo)}
-        var marker = new google.maps.Marker({
-        position: latlng,
-        map: map,
-        //animation: google.maps.Animation.DROP,
-        icon:'resources/taxi.png',
-        title: jobj.name
-        });
-        if (index >= 0)
-        {
-          currentTaxiMarkers[i] = [marker,jobj];
-        }
-        else
-        {
-          currentTaxiMarkers.push([marker,jobj]);
+          if (found === true){
+            currentTaxiMarkers[i][0].setIcon("resources/taxi_close.png")
+          }
+          else {
+            var latlng = {lat: parseFloat(jobj.la), lng: parseFloat(jobj.lo)}
+            var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            //animation: google.maps.Animation.DROP,
+            icon:'resources/taxi.png',
+            title: jobj.name
+            });
+
+            marker.addListener('click', function() {
+              map.setCenter(marker.getPosition());
+              $('#notificationBox').slideDown("slow");
+              $('#address').val(oldMarker.title)
+              $('#driver').text("To " + jobj.name)
+              $('#message').focus();
+              selectedEmail = jobj.email
+            });
+
+            if (index >= 0)
+            {
+              currentTaxiMarkers[index] = [marker,jobj];
+            }
+            else
+            {
+              currentTaxiMarkers.push([marker,jobj]);
+            }
+          }
         }
       }
 
@@ -71,7 +98,14 @@ require(SITE_ROOT . '/PHP/relations.php');
       function get_all_drivers() {
         ws.send("RETRIEVE_ALL");	// RETRIEVE_ALL is a command on server side
       }
-      window.onload = function () { setInterval( get_all_drivers, 1000);}
+      window.onload = function () {
+        setInterval( get_all_drivers, 1000);
+      }
+
+
+
+
+
     </script>
   </head>
   <body>
@@ -84,5 +118,28 @@ require(SITE_ROOT . '/PHP/relations.php');
 						echo "<div id= 'name'>" . $firstname . "</div>";
 			?>
     </div>
+    <div id = "notificationBox">
+      <form id="sendForm">
+          <label for = "message" class = "notiLabel">Message:</label>
+          <input type = "text" autofocus="autofocus" id = "message" class = "notiText">
+          <label for = "address" class = "notiLabel">Address:</label>
+          <input type = "text" id = "address" class = "notiText">
+          <label for = "sendNotification" id = "driver" class = "notiLabel"></label>
+        <button type="submit" id = "sendNotification">Send</button>
+      </form>
+    </div>
   </body>
+  <script>
+    $('#sendForm').submit(function (event) {
+      event.preventDefault();
+      $('#notificationBox').slideUp("slow");
+      var data = "<notify>" + "<email>" + selectedEmail + "</email>" +
+          "<addr>" + $('#address').val() + "</addr>" +
+          "<note>" + $('#message').val() + "</note>" +
+          "</notify>";
+      //alert(data);
+
+      ws.send(data);
+    });
+  </script>
 </html>

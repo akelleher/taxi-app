@@ -1,17 +1,19 @@
 <script type="text/javascript">
+
   function myFunction() {
-	var email = document.getElementById("email").value;
+	var email = document.getElementById("pass").value;
     var ok = true;
-    if (email == '') {
+    if (email != '') {
         //alert("Passwords Do not match");
         //document.getElementById("pass").style.borderColor = "#E34234";
         //document.getElementById("confirm").style.borderColor = "#E34234";
-		alert("Please enter value in email field");
+		alert("Email field is not blank pleasecheck enter value!!!");
         ok = false;
     }
     return ok;
 }
 </script>
+
 <?php
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once(SITE_ROOT . '/PHP/User.php');
@@ -20,39 +22,16 @@ require_once(SITE_ROOT . '/PHP/User.php');
 $message = '';
 $message_class = 'hidden';
 
+//Forgot password logic
 if( isset($_POST['form']) ) {
 	
 	switch ($_POST['form']) {
 		case 'PasswordChange':
 			try {
 				
-				$sec_key = USER::get_random_string();
-				if(USER::forgot_pass($_POST['email'], $sec_key)) {
-					
-					//header( 'Location: ' . SITE_URL . '/front_end/loginpage/new_password.php?email='.$_POST['email'] );
-					
-					$from = "Taxiping <noreply@taxiping.xyz>";
-					$from_name = "Taxiping.xyz";
-					$headers  = "From: $from\r\n";
-					$headers .= "Reply-To: noreply@taxiping.xyz\r\n";
-					$headers .= "Content-type: text/html\r\n";
-					$to = $_POST['email'];
-					$subject = "Taxiping : Forgot password";
-				
-					$link = 'http://taxiping.xyz/front_end/loginpage/reset_password.php?seckey='.$sec_key;
-					$message = 'Hi,
-					<br/><br/>
-					Please Reset Your Password by clicking this link.
-					<br/>
-					<a href='.$link.'><h3>Click Here</h3></a>
-					<br/>
-					Thank you,
-					<br/><br/>
-					Your friends at Taxiping.xyz
-					<br/> <br/>';
-			
-					@mail( $to, $subject, $message, $headers);
-					//$mail_sent = @mail( $to, $subject, $message, $headers);
+				if(USER::forgot_pass($_POST['email'], USER::get_random_string())) {
+					//Email random new password to user
+					header( 'Location: ' . SITE_URL . '/front_end/loginpage/new_password.php?email='.$_POST['email'] );
 					
 					$message = 'Success!';
 					$message_class = 'success';
@@ -74,7 +53,7 @@ if( isset($_POST['form']) ) {
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Forgot Password</title>
+		<title>Forgot Password Page</title>
 		<script type="text/javascript"></script>
 		<link rel="stylesheet" type="text/css" href="login.css">
 		

@@ -5,7 +5,7 @@ require_once(SITE_ROOT . '/PHP/Course.php');
 
 session_start();
 //Check user privilege level
-if( isset($_SESSION) && isset($_SESSION['user']) ){ 
+if( isset($_SESSION) && isset($_SESSION['user']) ){
   //Check if first time logging in - send to set password page
   $t = $_SESSION['user']->getIsfirstTime();
 
@@ -123,7 +123,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) ){
                     console.log("login successful")
                     //console.log(<?php echo SITE_URL; ?>)
                     document.location.href = '<?php echo SITE_URL; ?>/front_end/' + data;
-                    
+
                 }
             },
             error: function () {

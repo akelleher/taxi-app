@@ -1,4 +1,23 @@
 var map
+/*
+  The google maps marker class is used to place markers on the map
+  see google for more information.
+*/
+var oldMarker = new google.maps.Marker({});
+
+/*
+  The geocoder is used to take an address look up
+  the latitude and longitude of the location, or
+  reverse-geocoding is taking the latitude and
+  longitude and looking up the address that fits
+  best... this is used for the click on map functionality
+  since clicking on the map only provides the closest
+  lat/long.
+
+  Google 'geocoder' for more information about this class.
+*/
+var geocoder = new google.maps.Geocoder();
+var distances = []
 function initialize()
 {
   /*
@@ -84,24 +103,6 @@ function initialize()
     }
   };
 
-  /*
-    The google maps marker class is used to place markers on the map
-    see google for more information.
-  */
-  var oldMarker = new google.maps.Marker({});
-
-  /*
-    The geocoder is used to take an address look up
-    the latitude and longitude of the location, or
-    reverse-geocoding is taking the latitude and
-    longitude and looking up the address that fits
-    best... this is used for the click on map functionality
-    since clicking on the map only provides the closest
-    lat/long.
-
-    Google 'geocoder' for more information about this class.
-  */
-  var geocoder = new google.maps.Geocoder();
 
   /*
     The google map class is what creates the map on the screen.
@@ -125,6 +126,51 @@ function initialize()
   map.mapTypes.set('map_style', styledMap);
   map.setMapTypeId('map_style');
 
+  var rad = function(x) {
+    return x * Math.PI / 180;
+  };
+
+  var getDistance = function(p1, p2) {
+    var R = 6378137; // Earth’s mean radius in meter
+    var dLat = rad(p2.lat() - p1.lat());
+    var dLong = rad(p2.lng() - p1.lng());
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(rad(p1.lat())) * Math.cos(rad(p2.lat())) *
+      Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+    return d; // returns the distance in meter
+  };
+
+  function calcDistances(latLng)
+  {
+    distances = []
+    var max = 3
+    if (currentTaxiMarkers.length < max)
+    {
+      max = currentTaxiMarkers.length
+    }
+    for (i = 0; i < max; i++)
+    {
+      distances.push([getDistance(currentTaxiMarkers[i][0].position, latLng),i])
+      console.log(distances[0])
+      console.log(currentTaxiMarkers.length)
+    }
+    distances.sort()
+    for (i = 3; i < currentTaxiMarkers.length; i++)
+    {
+      var aDistance = getDistance(currentTaxiMarkers[i][0].position, latLng)
+      for (j = 0; j < 3; j++)
+      {
+        if (aDistance < distances[j][0])
+        {
+          distances[j] = [aDistance,i]
+          break
+        }
+      }
+      distances.sort()
+    }
+  }
   /*
     This function listens for a click on the map, and then
        1. deletes the old marker off the map
@@ -162,6 +208,7 @@ function initialize()
         window.alert('Geocoder failed due to: ' + status);
       }
     });
+    calcDistances(event.latLng)
   });
 
   /*
@@ -192,6 +239,8 @@ function initialize()
     oldMarker = marker;
     map.panTo(place.geometry.location);
     $('#addressBar:text').val('').focus();
+    console.log(place.geometry.location);
+    calcDistances(place.geometry.location);
 });
 
 }
