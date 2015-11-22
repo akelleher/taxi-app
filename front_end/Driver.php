@@ -105,11 +105,9 @@ require(SITE_ROOT . '/PHP/relations.php');
 					<div class="bottomButton">
 						Take a Break
 					</div>
-          <a href="logout.php" id ="logout">
-					  <div class="bottomButton">
-					     Logout
-					  </div>
-          </a>
+					<div class="bottomButton" href="logout.php">
+					    Logout
+					</div>
 				</div>
 			</center>
   </body>
