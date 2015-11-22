@@ -3,3 +3,9 @@ ALTER TABLE `passwords` ADD `secrate_key` VARCHAR(20) NOT NULL AFTER `password`;
 ----------------------------------------------------------------------------------------------
 Also, copy and paste the folder sk into your htdocs (in XAMPP) or www (in WAMPP), 
 do not remove the files from the folder sk
+
+
+
+
+
+whatever the hell you want
