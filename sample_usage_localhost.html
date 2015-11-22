@@ -1,0 +1,97 @@
+<html>
+<head>
+	<title> Sample Usage of WebSocket </title>
+	<script type="text/javascript">
+
+	// start a websocket 
+	// IP address: LOCALHOST
+        // RUN THE SERVER BEFORE OPEN THIS HTML FILE
+	// port number: 8787
+	url = 'ws://localhost:8787/chat-server';
+	ws = new WebSocket( url );
+
+	// websocket is event-driven
+	// define the behavior when receiving message
+	ws.onmessage = function(evt) {
+
+		var recv_msg = evt.data;
+		document.getElementById("output").value += recv_msg;
+
+		var jobj = JSON.parse(recv_msg);
+
+		
+	}
+
+	ws.onclose = function() {
+		alert("Connection is Closed.");
+	}
+
+	ws.onopen = function() {
+		alert("Connection is set up.")
+	}
+
+	// use this function to send message
+	function send_msg() {
+
+		var zero = document.getElementById("email").value.trim(); 
+		var one = document.getElementById("name").value.trim();
+		var two = document.getElementById("latitude").value.trim();
+		var three = document.getElementById("longitude").value.trim();
+
+		var sending = "<driver>" + 
+				"<email>" + zero + "</email>" +
+				"<name>" + one + "</name>" +
+				"<latitude>" + two + "</latitude>" + 
+				"<longitude>" + three + "</longitude>" + 
+				"</driver>";
+		alert(sending);
+		ws.send(sending);
+	}
+
+	function send_str() { ws.send(document.getElementById("str").value.trim());}
+
+	// in back end the data is verified by regular expression
+	// name cannot have characters other than a-z, A-Z, space and '
+	// longitude and latitude must be a number with some digits
+	function send_coordination_example() {
+
+		var data = "<driver>";
+		data = data + "<email>pomaj@rpi.edu</email>";
+		data = data + "<name>Juan Poma</name>";
+		data = data + "<latitude>-73.68</latitude>";
+		data = data + "<longitude>42.72</longitude>";
+		data = data + "</driver>";
+		
+		ws.send( data );
+
+	}
+
+	function get_all_drivers() {
+		ws.send("RETRIEVE_ALL");	// RETRIEVE_ALL is a command on server side		
+	}
+	
+	</script>
+</head>
+
+<body>
+
+	server's response: <textarea rows="4" cols="60" id="output"></textarea><br><br><br>
+
+	<input type="button" id="send_button" class="button" value="SEND JUAN POMA's LOCATION"
+		onClick="send_coordination_example()"/>
+	<input type="button" id="send_example_button" class="button" value="GET ALL DRIVERS" 
+		onClick="get_all_drivers()"/><br>
+
+        Email: <input type="text" id="email"><br>
+	Name: <input type="text" id="name"><br>
+	Latitude: <input type="text" id="latitude"><br>
+	Longitude: <input type="text" id="longitude">
+	<input type="button" id="send_" value="Send Coordination to Server" onClick="send_msg()">
+	<br><br><br>
+
+	String: <input type="text" id="str"> <input type="button" value="Send" 
+			onClick="send_str()">
+
+</body>
+
+</html>
