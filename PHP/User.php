@@ -4,30 +4,30 @@ require_once(SITE_ROOT . '/PHP/DB.php');
 
 class Dispatcher {
    var $subj;
-   var $crse;
+   var $email;
    var $week_day;
    var $start_time;
    var $end_time;
 
-   public function addDispatcher( $subj, $crse, $week_day, $start_time, $end_time ) {
+   public function addDispatcher( $subj, $email, $week_day, $start_time, $end_time ) {
 		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
 		}
-		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
+		if( !is_int($email) ) {
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $email should be an integer.');
 		}
 		if( !is_string($week_day) ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
 		}
 		$week_day = strtoupper($week_day);
 		if( $week_day !== 'SUNDAY' && $week_day !== 'MONDAY' && $week_day !== 'TUESDAY' && $week_day !== 'WEDNESDAY' && $week_day !== 'THURSDAY' && $week_day !== 'FRIDAY' && $week_day !== 'SATURDAY' ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
 		}
 		if( !is_string( $start_time ) || !preg_match('/\d{1,2}:\d{2}/', $start_time) ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $start_time should be a string of the format "HH:MM".');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $start_time should be a string of the format "HH:MM".');
 		}
 		if( !is_string( $end_time ) || !preg_match('/\d{1,2}:\d{2}/', $end_time) || $end_time <= $start_time ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $end_time should be a string of the format "HH:MM" and be later in the day then $start_time.');
+			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $end_time should be a string of the format "HH:MM" and be later in the day then $start_time.');
 		}
 	
 		if( !$this->isDispatcher ) {
@@ -36,10 +36,10 @@ class Dispatcher {
 		
 		$db = DB::getInstance();
 		try {
-			$result = $db->prep_execute('INSERT INTO Dispatcher_hours (email, subj, crse, week_day, start_time, end_time) VALUES (:email, :subj, :crse, :week_day, :start_time, :end_time);', array(
+			$result = $db->prep_execute('INSERT INTO Dispatcher_hours (email, subj, email, week_day, start_time, end_time) VALUES (:email, :subj, :email, :week_day, :start_time, :end_time);', array(
 				':email' => $this->email,
 				':subj' => $subj,
-				':crse' => $crse,
+				':email' => $email,
 				':week_day' => $week_day,
 				':start_time' => $start_time,
 				':end_time' => $end_time
@@ -55,21 +55,21 @@ class Dispatcher {
 		return false;
 	}
 	
-	public function removeDispatcher( $subj, $crse, $week_day ) {
+	public function removeDispatcher( $subj, $email, $week_day ) {
 		// --- ARGUMENT ERROR HANDLING ---
 		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
+			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
 		}
-		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
+		if( !is_int($email) ) {
+			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $email should be an integer.');
 		}
 		if( !is_string($week_day) ) {
-			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
+			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
 		}
 		// Sets $week_day to all uppercase characters after checking if string
 		$week_day = strtoupper($week_day);
 		if( $week_day !== 'SUNDAY' && $week_day !== 'MONDAY' && $week_day !== 'TUESDAY' && $week_day !== 'WEDNESDAY' && $week_day !== 'THURSDAY' && $week_day !== 'FRIDAY' && $week_day !== 'SATURDAY' ) {
-			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
+			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $email, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
 		}
 	
 		if( !$this->isDispatcher ) {
@@ -78,10 +78,10 @@ class Dispatcher {
 		
 		$db = DB::getInstance();
 		try {
-			$result = $db->prep_execute('DELETE FROM Dispatcher_hours WHERE email = :email AND subj = :subj AND crse = :crse AND week_day = :week_day;', array(
+			$result = $db->prep_execute('DELETE FROM Dispatcher_hours WHERE email = :email AND subj = :subj AND email = :email AND week_day = :week_day;', array(
 				':email' => $this->email,
 				':subj' => $subj,
-				':crse' => $crse,
+				':email' => $email,
 				':week_day' => $week_day
 			));
 		}
@@ -112,33 +112,33 @@ class Driver {
 		}
 		return $allDispatchers;
 	}
-    public function Driver_check( $rel, $subj, $crse ) {
+    public function Driver_check( $rel, $subj, $email ) {
 		// Argument Type Error Handling
 		
 		// $rel is a string
 		if( !is_string($rel) ) {
-			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
+			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $email) => $rel should be one of the following strings: "Driver", "Dispatcher"');
 		}
 		else { // $rel is either 'Driver' or 'Dispatcher'
 			$rel = strtolower($rel);
 			if( $rel !== 'Driver' && $rel !== 'Dispatcher' ) {
-				throw new DomainException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
+				throw new DomainException('USER::removeDriverCourse(string $rel, string $subj, int $email) => $rel should be one of the following strings: "Driver", "Dispatcher"');
 			}
 		}
 		// $subj is a string
 		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $subj should be a 4 character string.');
+			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $email) => $subj should be a 4 character string.');
 		}
-		// $crse is an int
-		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
+		// $email is an int
+		if( !is_int($email) ) {
+			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $email) => $email should be an integer.');
 		}
 
 		// If user is in database, remove user-course mapping to database
 		if( $this->inDB ) {
 			$db = DB::getInstance();
 			try {
-				return $db->prep_execute('DELETE FROM ' . $rel . 's_courses WHERE email = :email AND subj = :subj AND crse = :crse', array(
+				return $db->prep_execute('DELETE FROM ' . $rel . 's_courses WHERE email = :email AND subj = :subj AND email = :email', array(
 					':email' => $this->email,
 					':subj' => strtoupper($subj),
 				));
@@ -157,43 +157,43 @@ class Driver {
  
 class Admin {
    var $subj;
-   var $crse;
+   var $email;
    var $week_day;
    var $start_time;
    var $end_time;
     
     // Removes mapping in the database table Drivers_Dispatchers or Dispatchers_Drivers
 	// depending on $rel's value.
-	public function add_dispatch_driver( $rel, $subj, $crse ) {
+	public function add_dispatch_driver( $rel, $subj, $email ) {
 		// Argument Type Error Handling
 		
 		// $rel is a string
 		if( !is_string($rel) ) {
-			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
+			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $email) => $rel should be one of the following strings: "Driver", "Dispatcher"');
 		}
 		else { // $rel is either 'Driver' or 'Dispatcher'
 			$rel = strtolower($rel);
 			if( $rel !== 'Driver' && $rel !== 'Dispatcher' ) {
-				throw new DomainException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
+				throw new DomainException('USER::removeDriverCourse(string $rel, string $subj, int $email) => $rel should be one of the following strings: "Driver", "Dispatcher"');
 			}
 		}
 		// $subj is a string
 		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $subj should be a 4 character string.');
+			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $email) => $subj should be a 4 character string.');
 		}
-		// $crse is an int
-		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
+		// $email is an int
+		if( !is_int($email) ) {
+			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $email) => $email should be an integer.');
 		}
 
 		// If user is in database, remove user-course mapping to database
 		if( $this->inDB ) {
 			$db = DB::getInstance();
 			try {
-				return $db->prep_execute('DELETE FROM ' . $rel . 's_courses WHERE email = :email AND subj = :subj AND crse = :crse', array(
+				return $db->prep_execute('DELETE FROM ' . $rel . 's_courses WHERE email = :email AND subj = :subj AND email = :email', array(
 					':email' => $this->email,
 					':subj' => strtoupper($subj),
-					':crse' => $crse
+					':email' => $email
 				));
 			}
 			catch( PDOException $Exception ) {
@@ -630,289 +630,9 @@ class User {
 		return $this->lastName;
 	}
 	
-	// Return an array with database course rows that the Driver is enrolled in
-	public function getDriverCourses() {
-		require_once(SITE_ROOT . '\PHP\Course.php');
-		$courses = array();
-		if( $this->isDriver && $this->inDB ) {
-			$db = DB::getInstance();
-			$result = $db->prep_execute('SELECT subj, crse FROM Drivers_courses WHERE email = :email', array(
-				':email' => $this->email
-			));
-			
-			foreach($result as $row) {
-				$courses[] = COURSE::fromDatabase( $row['subj'], intval($row['crse']) );
-			}
-		}
-		return $courses;
-	}
-	
-	// Return an array with the course objects that the Dispatcher is teaching
-	public function getDispatcherCourses() {
-		require_once(SITE_ROOT . '\PHP\Course.php');
-		$courses = array();
-		if( $this->isDispatcher && $this->inDB ) {
-			$db = DB::getInstance();
-			$result = $db->prep_execute('SELECT subj, crse FROM Dispatchers_courses WHERE email = :email', array(
-				':email' => $this->email
-			));
-			
-			foreach($result as $row) {
-				$courses[] = COURSE::fromDatabase( $row['subj'], intval($row['crse']) );
-			}
-		}
-		return $courses;
-	}
-	
-	public function getDispatcherOfficeHours() {
-		require_once( SITE_ROOT . '\php\Course.php');
-		$hours = array();
-		if( $this->isDispatcher && $this->inDB ) {
-			$db = DB::getInstance();
-			$hours_rows = $db->prep_execute('SELECT subj, crse, week_day, start_time, end_time FROM Dispatcher_hours WHERE email = :email;', array(
-				':email' => $this->email
-			));
-			
-			foreach( $hours_rows as $row ) {
-				$hours[] = [
-					'course' => COURSE::fromDatabase( $row['subj'], intval($row['crse']) ),
-					'week_day' => $row['week_day'],
-					'startTime' => $row['start_time'],
-					'endTime' => $row['end_time']
-				];
-			}
-		}
-		return $hours;
-	}
-	
-	// Return an array with database Dispatchers that are mapped to Driver's courses
-	public function getDriverDispatchers() {
-		if( $this->isDriver && $this->inDB ) {
-			$db = DB::getInstance();
-			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse FROM users as u1 INNER JOIN Drivers_courses AS sc ON u1.email = sc.email INNER JOIN Dispatchers_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.email = u2.email WHERE u1.email = :email', array(
-				':email' => $this->email
-			));
-		}
-		return false;
-	}
-	
-	// Return an array with database Dispatchers that are mapped to Driver's courses
-	// along with that Dispatcher's office hours for that course.
-	public function getDriverDispatchersOfficeHours() {
-		if( $this->isDriver && $this->inDB ) {
-			$db = DB::getInstance();
-			return $db->prep_execute('SELECT u2.email, u2.firstName, u2.lastName, sc.subj, sc.crse, h.week_day, h.start_time, h.end_time FROM users as u1 INNER JOIN Drivers_courses AS sc ON u1.email = sc.email INNER JOIN Dispatchers_courses AS tc ON sc.subj = tc.subj AND sc.crse = tc.crse INNER JOIN users as u2 ON tc.email = u2.email LEFT OUTER JOIN Dispatcher_hours as h ON u2.email = h.email AND tc.subj = h.subj AND tc.crse = h.crse WHERE u1.email = :email', array(
-				':email' => $this->email
-			));
-		}
-		return false;
-	}
-	
 	
 	// ########################## MODIFIER FUNCTIONS ###########################
-	
-	// Creates a mapping in the database table Drivers_courses or Dispatchers_courses
-	// depending on $rel's value. Maps Drivers or Dispatchers to courses.
-	public function addUserCourse( $rel, $subj, $crse ) {
-		// --- Argument Type Error Handling ---
-		
-		// $rel is a string
-		if( !is_string($rel) ) {
-			throw new InvalidArgumentException('USER::addDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
-		}
-		else { // $rel is 'Driver' or 'Dispatcher'
-			$rel = strtolower($rel);
-			if( $rel !== 'Driver' && $rel !== 'Dispatcher' ) {
-				throw new InvalidArgumentException('USER::addDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver" or "Dispatcher"');
-			}
-		}
-		// $subj is a string
-		if( !is_string($subj) ) {
-			throw new InvalidArgumentException('USER::addDriverCourse(string $rel, string $subj, int $crse) => $subj should be a string.');
-		}
-		// $crse is an int
-		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::addDriverCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
-		}
-		// User's Dispatcher or Driver flag is true for the corresponding $rel option
-		if( ($rel === 'Driver' && !$this->isDriver) || ($rel === 'Dispatcher' && !$this->isDispatcher) ) {
-			return false;
-		}
 
-		// If user has uid (is in database), add user-course mapping to database
-		if($this->inDB ) {
-			$db = DB::getInstance();
-			try {
-				return $db->prep_execute('INSERT INTO ' . $rel . 's_courses (email, subj, crse) VALUES (:email, :subj, :crse)', array(
-					':email' => $this->email,
-					':subj' => strtoupper($subj),
-					':crse' => $crse
-				));
-			}
-			catch( PDOException $Exception ) {
-				// Return false if there is an error
-				return false;
-			}
-		}
-		// Return false if user not in database
-		return false;
-	}
-	
-	public function addDispatcherCourseWithDispatcher_Code( $Dispatcher_code ) {
-		if( $this->inDB ) {
-			require_once(SITE_ROOT . '/PHP/Course.php');
-			$course = COURSE::withDispatcher_Code( $Dispatcher_code );
-			
-			$db = DB::getInstance();
-			try {
-				if( $course !== null ) {
-					$result = $db->prep_execute( 'INSERT INTO Dispatchers_courses (email, subj, crse) VALUES (:email, :subj, :crse)', array(
-						':email' => $this->email,
-						':subj' => $course->getSubj(),
-						':crse' => $course->getCrse()
-					));
-					
-					if( !empty($result) ) {
-						return $this->setIsDispatcher(true, true);
-					}
-				}
-			}
-			catch( PDOException $Exception ) {
-				// Return false if there is an error
-				return false;
-			}
-		}
-		return false;
-	}
-	
-	public function addDispatcherOfficeHours( $subj, $crse, $week_day, $start_time, $end_time ) {
-		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
-		}
-		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
-		}
-		if( !is_string($week_day) ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
-		}
-		$week_day = strtoupper($week_day);
-		if( $week_day !== 'SUNDAY' && $week_day !== 'MONDAY' && $week_day !== 'TUESDAY' && $week_day !== 'WEDNESDAY' && $week_day !== 'THURSDAY' && $week_day !== 'FRIDAY' && $week_day !== 'SATURDAY' ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
-		}
-		if( !is_string( $start_time ) || !preg_match('/\d{1,2}:\d{2}/', $start_time) ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $start_time should be a string of the format "HH:MM".');
-		}
-		if( !is_string( $end_time ) || !preg_match('/\d{1,2}:\d{2}/', $end_time) || $end_time <= $start_time ) {
-			throw new InvalidArgumentException('USER::addDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $end_time should be a string of the format "HH:MM" and be later in the day then $start_time.');
-		}
-	
-		if( !$this->isDispatcher ) {
-			return false;
-		}
-		
-		$db = DB::getInstance();
-		try {
-			$result = $db->prep_execute('INSERT INTO Dispatcher_hours (email, subj, crse, week_day, start_time, end_time) VALUES (:email, :subj, :crse, :week_day, :start_time, :end_time);', array(
-				':email' => $this->email,
-				':subj' => $subj,
-				':crse' => $crse,
-				':week_day' => $week_day,
-				':start_time' => $start_time,
-				':end_time' => $end_time
-			));
-		}
-		catch( PDOException $e ) {
-			return false;
-		}
-		
-		if( $result ) {
-			return true;
-		}
-		return false;
-	}
-	
-	public function removeDispatcherOfficeHours( $subj, $crse, $week_day ) {
-		// --- ARGUMENT ERROR HANDLING ---
-		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $subj should be a 4 character string.');
-		}
-		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $crse should be an integer.');
-		}
-		if( !is_string($week_day) ) {
-			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be a string.');
-		}
-		// Sets $week_day to all uppercase characters after checking if string
-		$week_day = strtoupper($week_day);
-		if( $week_day !== 'SUNDAY' && $week_day !== 'MONDAY' && $week_day !== 'TUESDAY' && $week_day !== 'WEDNESDAY' && $week_day !== 'THURSDAY' && $week_day !== 'FRIDAY' && $week_day !== 'SATURDAY' ) {
-			throw new InvalidArgumentException('USER::removeDispatcherOfficeHours( string $subj, int $crse, string $week_day, string $start_time, string $end_time ) => $week_day should be any of the following: "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", or "SATURDAY".');
-		}
-	
-		if( !$this->isDispatcher ) {
-			return false;
-		}
-		
-		$db = DB::getInstance();
-		try {
-			$result = $db->prep_execute('DELETE FROM Dispatcher_hours WHERE email = :email AND subj = :subj AND crse = :crse AND week_day = :week_day;', array(
-				':email' => $this->email,
-				':subj' => $subj,
-				':crse' => $crse,
-				':week_day' => $week_day
-			));
-		}
-		catch( PDOException $e ) {
-			return false;
-		}
-		
-		if( $result ) {
-			return true;
-		}
-		return false;
-	}
-	
-	// Removes mapping in the database table Drivers_courses or Dispatchers_courses
-	// depending on $rel's value.
-	public function removeUserCourse( $rel, $subj, $crse ) {
-		// Argument Type Error Handling
-		
-		// $rel is a string
-		if( !is_string($rel) ) {
-			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
-		}
-		else { // $rel is either 'Driver' or 'Dispatcher'
-			$rel = strtolower($rel);
-			if( $rel !== 'Driver' && $rel !== 'Dispatcher' ) {
-				throw new DomainException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $rel should be one of the following strings: "Driver", "Dispatcher"');
-			}
-		}
-		// $subj is a string
-		if( !is_string($subj) || strlen($subj) !== 4 ) {
-			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $subj should be a 4 character string.');
-		}
-		// $crse is an int
-		if( !is_int($crse) ) {
-			throw new InvalidArgumentException('USER::removeDriverCourse(string $rel, string $subj, int $crse) => $crse should be an integer.');
-		}
-
-		// If user is in database, remove user-course mapping to database
-		if( $this->inDB ) {
-			$db = DB::getInstance();
-			try {
-				return $db->prep_execute('DELETE FROM ' . $rel . 's_courses WHERE email = :email AND subj = :subj AND crse = :crse', array(
-					':email' => $this->email,
-					':subj' => strtoupper($subj),
-					':crse' => $crse
-				));
-			}
-			catch( PDOException $Exception ) {
-				// Return false if a database error occures
-				return false;
-			}
-		}
-		// Return false if user not in database
-		return false;
-	}
 	
 	// Validates and sets the email address of the user. DOES NOT STORE IN
 	// DATABASE! Call USER::store(bool) to store in database.
