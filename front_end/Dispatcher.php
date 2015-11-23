@@ -51,7 +51,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
                 break
             }
           }
-          if (found === true){
+          if (found === true && jobj.note === "active"){
             currentTaxiMarkers[i][0].setIcon("resources/taxi_close.png")
           }
           else {
