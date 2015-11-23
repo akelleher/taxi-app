@@ -43,8 +43,23 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
 
         var recv_msg = evt.data;
 
-        var jobj = JSON.parse(recv_msg);
+    		var jobj = JSON.parse(recv_msg);
 
+    		// pop out a dialog
+    		// assume sender with email address: pomaj@rpi.edu
+    		// assume answer is 'Y' (stands for Yes)
+    		if(jobj.type == "notification") {
+
+    			var display = "Address: " + jobj.addr + "\n\nNote: " + jobj.note;
+    			var r = confirm(display);
+    			if (r == true) {
+    				ws.send("<response><reply>Y</reply><email>"+email+
+            "</email></response>");
+    			} else {
+            ws.send("<response><reply>N</reply><email>"+email+
+            "</email></response>");
+    			}
+    		}
       }
 
       ws.onclose = function() {
@@ -97,18 +112,40 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
 			<center>
 				<input id = "driverAddressBar" class = "controls" type = "text" placeholder = "Search Address">
 				<div id="bottom">
-					<div class="bottomButton">
-						Picked up Passenger
-					</div>
-					<div class="bottomButton">
-						Take a Break
-					</div>
+					<div class="bottomButton" id="pickedPassenger">Picked up Passenger</div>
+					<div class="bottomButton" id="takeBreak">Take a Break</div>
           <a href="logout.php">
-					  <div class="bottomButton">
-					      Logout
-					  </div>
+					  <div class="bottomButton" id="logoutButton">Logout</div>
           </a>
 				</div>
 			</center>
   </body>
+  <script>
+    $('#takeBreak').click(function()
+    {
+      if ($('#takeBreak').text() === "Take a Break"){
+        status = "offline"
+        $('#takeBreak').text("End Break");
+      }
+      else {
+        status = "active"
+        $('#takeBreak').text("Take a Break");
+      }
+      $('#pickedPassenger').slideToggle();
+      $('#logoutButton').slideToggle();
+    });
+    $('#pickedPassenger').click(function()
+    {
+      if ($('#pickedPassenger').text() === "Picked up Passenger"){
+        status = "busy"
+        $('#pickedPassenger').text("Dropped off Passenger");
+      }
+      else {
+        status = "active"
+        $('#pickedPassenger').text("Picked up Passenger");
+      }
+      $('#takeBreak').slideToggle();
+      $('#logoutButton').slideToggle();
+    });
+  </script>
 </html>

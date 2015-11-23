@@ -45,6 +45,15 @@ html, body, #mapCanvas
   margin-right:15px;
   color:white;
 }
+#notificationBar
+{
+  position:relative;
+  float:left;
+  width: 30%;
+  height: 100%;
+  background-image:url("loginpage/images/login_background.png");
+  overflow:auto;
+}
 #bottom
 {
   position:fixed;
@@ -61,6 +70,24 @@ html, body, #mapCanvas
   width:100%;
   background-image:url("loginpage/images/login_background.png");
   display:none;
+}
+.notification
+{
+  margin-top:20px;
+  width:100%;
+  height:100px;
+  background-color:black;
+  border-radius:10px;
+  color:white;
+}
+.notificationAccept
+{
+  margin-top:20px;
+  width:100%;
+  height:100px;
+  background-color:white;
+  border-radius:10px;
+  color:black;
 }
 .notiText
 {
@@ -86,6 +113,41 @@ html, body, #mapCanvas
   margin-right: 10px;
   float:left;
 }
+.clickHere
+{
+  margin-top:15px;
+  margin-left: 20px;
+  margin-right: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+#notificationButton
+{
+  height:50px;
+  width:50px;
+  position:relative;
+  float:left;
+  margin-top:20px;
+  margin-left:20px;
+  background-color:white;
+  border-radius:25px;
+}
+.noteTitle
+{
+  margin-top: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.noteText
+{
+  margin-top:15px;
+  margin-left: 20px;
+  margin-right: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+}
 #sendNotification
 {
   font-size:15px;
@@ -100,5 +162,18 @@ html, body, #mapCanvas
   height: 30%;
   margin-top:5px;
   width: 95%;
-  background-color:white;
+  font-size: 40px;
+  color: white;
+}
+#pickedPassenger
+{
+  background-color: #505050;
+}
+#takeBreak
+{
+  background-color: #383838;
+}
+#logoutButton
+{
+  background-color: #202020;
 }

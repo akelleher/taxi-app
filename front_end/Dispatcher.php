@@ -27,9 +27,9 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
       // define the behavior when receiving message
       var selectedEmail = ""
       var currentTaxiMarkers = []
+      var naming = 0;
       ws.onmessage = function(evt) {
         var recv_msg = evt.data;
-        console.log(recv_msg)
         var jobj = JSON.parse(recv_msg);
         if (jobj.type === "driver_coordination")
         {
@@ -56,22 +56,36 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
           }
           else {
             var latlng = {lat: parseFloat(jobj.la), lng: parseFloat(jobj.lo)}
-            var marker = new google.maps.Marker({
-            position: latlng,
-            map: map,
-            //animation: google.maps.Animation.DROP,
-            icon:'resources/taxi.png',
-            title: jobj.name
-            });
-
-            marker.addListener('click', function() {
-              map.setCenter(marker.getPosition());
-              $('#notificationBox').slideDown("slow");
-              $('#address').val(oldMarker.title)
-              $('#driver').text("To " + jobj.name)
-              $('#message').focus();
-              selectedEmail = jobj.email
-            });
+            var marker
+            if (jobj.note === "busy"){
+              marker = new google.maps.Marker({
+              position: latlng,
+              map: map,
+              //animation: google.maps.Animation.DROP,
+              icon:'resources/taxi_busy.png',
+              title: jobj.name
+              });
+            }
+            else if (jobj.note === "active"){
+              marker = new google.maps.Marker({
+              position: latlng,
+              map: map,
+              //animation: google.maps.Animation.DROP,
+              icon:'resources/taxi.png',
+              title: jobj.name
+              });
+              marker.addListener('click', function() {
+                map.setCenter(marker.getPosition());
+                $('#notificationBox').slideDown("slow");
+                $('#address').val(oldMarker.title)
+                $('#driver').text("To " + jobj.name)
+                $('#message').focus();
+                selectedEmail = jobj.email
+              });
+            }
+            else {
+              marker = new google.maps.Marker({});
+            }
 
             if (index >= 0)
             {
@@ -81,6 +95,27 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
             {
               currentTaxiMarkers.push([marker,jobj]);
             }
+          }
+        }
+        else if (jobj.type === "reply_notification")
+        {
+          if (jobj.reply === "N")
+          {
+            $('#masterNote').clone().attr('id', naming.toString()).attr('class', 'notification').prependTo(notificationBar);
+            $('#'+naming.toString()).children('.noteTitle').text(jobj.name + " Rejected Request");
+            $('#'+naming.toString()).children('.noteText').text(jobj.addr);
+            $('#'+naming.toString()).show();
+            $('#notificationButton').css('background-color','red');
+            naming += 1;
+          }
+          else
+          {
+            $('#masterNote').clone().attr('id', naming.toString()).attr('class', 'notificationAccept').prependTo(notificationBar);
+            $('#'+naming.toString()).children('.noteTitle').text(jobj.name + " Accepted Request");
+            $('#'+naming.toString()).children('.noteText').text(jobj.addr);
+            $('#'+naming.toString()).children('.clickHere').text("");
+            $('#'+naming.toString()).show();
+            naming += 1;
           }
         }
       }
@@ -98,13 +133,8 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
         ws.send("RETRIEVE_ALL");	// RETRIEVE_ALL is a command on server side
       }
       window.onload = function () {
-        setInterval( get_all_drivers, 1000);
+        setInterval( get_all_drivers, 1500);
       }
-
-
-
-
-
     </script>
   </head>
   <body>
@@ -117,12 +147,21 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
 						echo "<div id= 'name'>" . $firstname . "</div>";
 			?>
     </div>
+      <div id= "notificationBar">
+        <div class="notification" id = "masterNote">
+          <div class="noteTitle"></div>
+          <div class="noteText"></div>
+          <div class="clickHere">Click Here to Pick Again</div>
+        </div>
+      </div>
+    <div id="notificationButton">
+    </div>
     <div id = "notificationBox">
       <form id="sendForm">
           <label for = "message" class = "notiLabel">Message:</label>
-          <input type = "text" autofocus="autofocus" id = "message" class = "notiText">
+          <input type = "text" autofocus="autofocus" id = "message" class = "notiText" autocomplete="off">
           <label for = "address" class = "notiLabel">Address:</label>
-          <input type = "text" id = "address" class = "notiText">
+          <input type = "text" id = "address" class = "notiText" autocomplete="off">
           <label for = "sendNotification" id = "driver" class = "notiLabel"></label>
         <button type="submit" id = "sendNotification">Send</button>
       </form>
@@ -134,11 +173,28 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
       $('#notificationBox').slideUp("slow");
       var data = "<notify>" + "<email>" + selectedEmail + "</email>" +
           "<addr>" + $('#address').val() + "</addr>" +
-          "<note>" + $('#message').val() + "</note>" +
+          "<note>" + $('#message').val() + " " + "</note>" +
           "</notify>";
       //alert(data);
       console.log(data)
       ws.send(data);
     });
+    $("#notificationBar").hide();
+    $("#notificationButton").click(function(){
+      if (!$('#notificationBar').is(":visible")){
+          $("#notificationBar").show();
+      }
+      else {
+        $("#notificationBar").hide();
+      }
+      $("#notificationButton").css("background-color","white");
+    });
+    $('#notificationBar').on('click', '.notification', function(){
+      $('#addressBar').val($(this).children('.noteText').text());
+      $("#notificationBar").hide();
+      $(this).remove();
+      $('#addressBar').focus();
+    });
+    $('#masterNote').hide()
   </script>
 </html>
