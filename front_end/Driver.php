@@ -49,16 +49,14 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
     		// assume sender with email address: pomaj@rpi.edu
     		// assume answer is 'Y' (stands for Yes)
     		if(jobj.type == "notification") {
-
-    			var display = "Address: " + jobj.addr + "\n\nNote: " + jobj.note;
-    			var r = confirm(display);
-    			if (r == true) {
-    				ws.send("<response><reply>Y</reply><email>"+email+
-            "</email></response>");
-    			} else {
-            ws.send("<response><reply>N</reply><email>"+email+
-            "</email></response>");
-    			}
+          $('#popUp').show();
+          $('#accept').show();
+          $('#decline').show();
+          $('#pickedPassenger').hide();
+          $('#takeBreak').hide();
+          $('#logoutButton').hide();
+          $('#addressSection').text( "Address: " + jobj.addr )
+          $('#noteSection').text( "Note: " + jobj.note )
     		}
       }
 
@@ -112,6 +110,12 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
 			<center>
 				<input id = "addressBar" class = "controls" type = "text" placeholder = "Search Address">
 				<div id="bottom">
+          <div class="bottomButton" id="popUp">
+            <div id="addressSection"></div>
+            <div id="noteSection"></div>
+          </div>
+          <div class="bottomButton" id="accept">Accept</div>
+          <div class="bottomButton" id="decline">Decline</div>
 					<div class="bottomButton" id="pickedPassenger">Picked Up</div>
 					<div class="bottomButton" id="takeBreak">Take a Break</div>
           <a href="logout.php">
@@ -147,5 +151,30 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
       $('#takeBreak').slideToggle();
       $('#logoutButton').slideToggle();
     });
+    $('#addressBar').hide();
+    $('#popUp').hide();
+    $('#accept').hide();
+    $('#decline').hide();
+    $('#accept').click(function(){
+      ws.send("<response><reply>Y</reply><email>"+email+
+      "</email></response>");
+      $('#popUp').hide();
+      $('#accept').hide();
+      $('#decline').hide();
+      $('#pickedPassenger').show();
+      $('#takeBreak').show();
+      $('#logoutButton').show();
+    });
+    $('#decline').click(function(){
+      ws.send("<response><reply>N</reply><email>"+email+
+      "</email></response>");
+      $('#popUp').hide();
+      $('#accept').hide();
+      $('#decline').hide();
+      $('#pickedPassenger').show();
+      $('#takeBreak').show();
+      $('#logoutButton').show();
+    });
+
   </script>
 </html>

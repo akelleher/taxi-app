@@ -177,3 +177,25 @@ html, body, #mapCanvas
 {
   background-color: #202020;
 }
+#popUp
+{
+  font-size:15px;
+  background-color: blue;
+}
+#accept
+{
+  background-color: #383838;
+}
+#decline
+{
+  background-color: #383838;
+}
+#addressSection
+{
+  width:100%;
+}
+#noteSection
+{
+  margin-top:15px;
+  width:100%;
+}
