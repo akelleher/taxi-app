@@ -51,51 +51,49 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
                 break
             }
           }
+          var latlng = {lat: parseFloat(jobj.la), lng: parseFloat(jobj.lo)}
+          var marker
+          if (jobj.note === "busy"){
+            marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            //animation: google.maps.Animation.DROP,
+            icon:'resources/taxi_busy.png',
+            title: jobj.name
+            });
+          }
+          else if (jobj.note === "active"){
+            marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            //animation: google.maps.Animation.DROP,
+            icon:'resources/taxi.png',
+            title: jobj.name
+            });
+            marker.addListener('click', function() {
+              map.setCenter(marker.getPosition());
+              $('#notificationBox').slideDown("slow");
+              $('#address').val(oldMarker.title)
+              $('#driver').text("To " + jobj.name)
+              $('#message').focus();
+              selectedEmail = jobj.email
+            });
+          }
+          else {
+            marker = new google.maps.Marker({});
+          }
+
+          if (index >= 0)
+          {
+            currentTaxiMarkers[index] = [marker,jobj];
+          }
+          else
+          {
+            currentTaxiMarkers.push([marker,jobj]);
+          }
           if (found === true && jobj.note === "active"){
             currentTaxiMarkers[index][0].setIcon("resources/taxi_close.png")
             return;
-          }
-          else {
-            var latlng = {lat: parseFloat(jobj.la), lng: parseFloat(jobj.lo)}
-            var marker
-            if (jobj.note === "busy"){
-              marker = new google.maps.Marker({
-              position: latlng,
-              map: map,
-              //animation: google.maps.Animation.DROP,
-              icon:'resources/taxi_busy.png',
-              title: jobj.name
-              });
-            }
-            else if (jobj.note === "active"){
-              marker = new google.maps.Marker({
-              position: latlng,
-              map: map,
-              //animation: google.maps.Animation.DROP,
-              icon:'resources/taxi.png',
-              title: jobj.name
-              });
-              marker.addListener('click', function() {
-                map.setCenter(marker.getPosition());
-                $('#notificationBox').slideDown("slow");
-                $('#address').val(oldMarker.title)
-                $('#driver').text("To " + jobj.name)
-                $('#message').focus();
-                selectedEmail = jobj.email
-              });
-            }
-            else {
-              marker = new google.maps.Marker({});
-            }
-
-            if (index >= 0)
-            {
-              currentTaxiMarkers[index] = [marker,jobj];
-            }
-            else
-            {
-              currentTaxiMarkers.push([marker,jobj]);
-            }
           }
         }
         else if (jobj.type === "reply_notification")
