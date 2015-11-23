@@ -44,9 +44,25 @@ require(SITE_ROOT . '/PHP/relations.php');
       ws.onmessage = function(evt) {
 
         var recv_msg = evt.data;
+    		document.getElementById("output").value += recv_msg;
 
-        var jobj = JSON.parse(recv_msg);
+    		var jobj = JSON.parse(recv_msg);
 
+    		// pop out a dialog
+    		// assume sender with email address: pomaj@rpi.edu
+    		// assume answer is 'Y' (stands for Yes)
+    		if(jobj.type == "notification") {
+
+    			var display = "Address: " + jobj.addr + "\n\nNote: " + jobj.note;
+    			var r = confirm(display);
+    			if (r == true) {
+    				ws.send("<response><reply>Y</reply><email>"+email+
+            "</email><addr>"+jobj.addr+"</addr><name>"+name+"</name></response>");
+    			} else {
+            ws.send("<response><reply>N</reply><email>"+email+
+            "</email><addr>"+jobj.addr+"</addr><name>"+name+"</name></response>");
+    			}
+    		}
       }
 
       ws.onclose = function() {
