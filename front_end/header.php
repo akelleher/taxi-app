@@ -21,7 +21,7 @@ if( !isset($_SESSION) ) {
 	<nav>
 		<ul>
 			<?php if( $_SESSION['user']->getIsAdmin() ) : ?>
-						<li><a href="admin.php" <?php if( curPageName() === 'admin.php' ) : ?>class="current" <?php endif; ?>>Admin</a></li>
+						<li><a href="admin.php" <?php if( curPageName() === 'Admin.php' ) : ?>class="current" <?php endif; ?>>Admin</a></li>
 			<?php endif; ?>
 			<?php if( $_SESSION['user']->getIsDriver() ) : ?>
 						<li><a href="Driver.php" <?php if( curPageName() === 'Driver.php' ) : ?>class="current" <?php endif; ?>>Driver</a></li>
