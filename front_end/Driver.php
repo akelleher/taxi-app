@@ -112,7 +112,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
 			<center>
 				<input id = "addressBar" class = "controls" type = "text" placeholder = "Search Address">
 				<div id="bottom">
-					<div class="bottomButton" id="pickedPassenger">Picked up Passenger</div>
+					<div class="bottomButton" id="pickedPassenger">Picked Up</div>
 					<div class="bottomButton" id="takeBreak">Take a Break</div>
           <a href="logout.php">
 					  <div class="bottomButton" id="logoutButton">Logout</div>
@@ -136,13 +136,13 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
     });
     $('#pickedPassenger').click(function()
     {
-      if ($('#pickedPassenger').text() === "Picked up Passenger"){
+      if ($('#pickedPassenger').text() === "Picked Up"){
         status = "busy"
-        $('#pickedPassenger').text("Dropped off Passenger");
+        $('#pickedPassenger').text("Dropped Off");
       }
       else {
         status = "active"
-        $('#pickedPassenger').text("Picked up Passenger");
+        $('#pickedPassenger').text("Picked Up");
       }
       $('#takeBreak').slideToggle();
       $('#logoutButton').slideToggle();
