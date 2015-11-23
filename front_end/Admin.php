@@ -134,7 +134,7 @@ if( isset($_POST['form']) ) {
 				</div>
 				<div class="input_inline">
 					<input id="AddUser_firstTime" type="checkbox" name="firstTime" />
-					<label for="AddUser_firstTime">First time?</label>
+					<label for="AddUser_firstTime">Reset Password?</label>
 				</div>
 				<input class="input_block" type="submit" value="Add User" />
 			</form>
