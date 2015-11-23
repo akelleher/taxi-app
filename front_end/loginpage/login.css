@@ -12,10 +12,6 @@ html, body {
 	width:100%;
 	padding: 5%;
 }
-#login
-{
-	margin-top:-140px;
-}
 #login_error {
 	color: red;
 	padding: 0;
@@ -74,6 +70,5 @@ html, body {
 }
 #logo
 {
-	margin-top: -100px;
 	max-width:98%;
 }
