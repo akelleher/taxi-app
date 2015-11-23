@@ -50,6 +50,7 @@ if( isset($_SESSION) && isset($_SESSION['user']) ){
         </div>
         <div class = "col-xs-12 col-sm-6">
           <center>
+            <img src="images/logo.png" height="400" id = "logo">
             <div id = "login">
               <form role = "form" class="loginForm">
                 <div class = "form-group">

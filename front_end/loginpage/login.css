@@ -12,6 +12,10 @@ html, body {
 	width:100%;
 	padding: 5%;
 }
+#login
+{
+	margin-top:-140px;
+}
 #login_error {
 	color: red;
 	padding: 0;
@@ -67,4 +71,8 @@ html, body {
  align-items : center;
 
  width: 100%;
+}
+#logo
+{
+	margin-top: -100px;
 }

@@ -178,6 +178,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
       //alert(data);
       console.log(data)
       ws.send(data);
+      $('#message').val("")
     });
     $("#notificationBar").hide();
     $("#notificationButton").click(function(){

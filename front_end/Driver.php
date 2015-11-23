@@ -110,7 +110,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
   <body>
     <div id="mapCanvas"></div>
 			<center>
-				<input id = "driverAddressBar" class = "controls" type = "text" placeholder = "Search Address">
+				<input id = "addressBar" class = "controls" type = "text" placeholder = "Search Address">
 				<div id="bottom">
 					<div class="bottomButton" id="pickedPassenger">Picked up Passenger</div>
 					<div class="bottomButton" id="takeBreak">Take a Break</div>

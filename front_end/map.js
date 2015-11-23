@@ -240,7 +240,9 @@ function initialize()
     map.panTo(place.geometry.location);
     $('#addressBar:text').val('').focus();
     console.log(place.geometry.location);
-    calcDistances(place.geometry.location);
+    if (document.location.href.match(/[^\/]+$/)[0] === "Dispatcher.php"){
+      calcDistances(place.geometry.location);
+    }
 });
 
 }
