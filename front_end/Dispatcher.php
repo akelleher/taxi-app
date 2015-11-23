@@ -52,8 +52,15 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
             }
           }
           if (found === true && jobj.note === "active"){
-            currentTaxiMarkers[index][0].setIcon("resources/taxi_close.png")
-            return;
+            currentTaxiMarkers[index][0].setMap(null);
+            var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            //animation: google.maps.Animation.DROP,
+            icon:'resources/taxi_close.png',
+            title: jobj.name
+            });
+            currentTaxiMarkers[index] = [marker,jobj];
           }
           else {
             var latlng = {lat: parseFloat(jobj.la), lng: parseFloat(jobj.lo)}
