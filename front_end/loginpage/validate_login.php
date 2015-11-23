@@ -41,7 +41,7 @@
 							echo 'Dispatcher.php';
 						}
 						else {
-							echo '_profile.php';
+							echo '';
 						}
 					}
 					else {

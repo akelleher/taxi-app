@@ -1,7 +1,6 @@
 <?php
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once(SITE_ROOT . '/PHP/User.php');
-require_once(SITE_ROOT . '/PHP/Course.php');
 
 session_start();
 //If user's first time logging in, force them to set a password

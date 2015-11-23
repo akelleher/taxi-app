@@ -30,7 +30,6 @@ if( !isset($_SESSION) ) {
 						<li><a href="Dispatcher.php" <?php if( curPageName() === 'Dispatcher.php' ) : ?> class="current" <?php endif; ?>>Dispatcher</a></li>
 			<?php endif; ?>
 
-			<li><a href="search_add.php" <?php if( curPageName() === 'search_add.php' ) : ?> class="current" <?php endif; ?>>Search/Add Driver</a></li>
 
 
 

@@ -23,7 +23,6 @@
 <?php
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once(SITE_ROOT . '/PHP/User.php');
-require_once(SITE_ROOT . '/PHP/Course.php');
 require(SITE_ROOT . '/PHP/check_logged_in.php');
 
 $message = '';

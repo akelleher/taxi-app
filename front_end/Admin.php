@@ -1,12 +1,9 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . '/config.php');
 require(SITE_ROOT . '/PHP/User.php');
-require(SITE_ROOT . '/PHP/Course.php');
-require(SITE_ROOT . '/PHP/relations.php');
 require(SITE_ROOT . '/PHP/check_logged_in.php');
 
 $users = USER::getAllUsers();
-$courses = COURSE::getAllCourses();
 
 $message = '';
 $message_class = 'hidden';
@@ -152,7 +149,7 @@ if( isset($_POST['form']) ) {
 		</section>
 
 		<footer>
-			© 2014 TaxiPing
+			© 2015 TaxiPing
 		</footer>
 	</div><!-- .wrapper -->
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
