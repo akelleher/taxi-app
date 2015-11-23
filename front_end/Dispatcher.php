@@ -29,6 +29,7 @@ require(SITE_ROOT . '/PHP/relations.php');
       // define the behavior when receiving message
       var selectedEmail = ""
       var currentTaxiMarkers = []
+      var naming = 0;
       ws.onmessage = function(evt) {
         var recv_msg = evt.data;
         console.log(recv_msg)
@@ -58,22 +59,34 @@ require(SITE_ROOT . '/PHP/relations.php');
           }
           else {
             var latlng = {lat: parseFloat(jobj.la), lng: parseFloat(jobj.lo)}
-            var marker = new google.maps.Marker({
-            position: latlng,
-            map: map,
-            //animation: google.maps.Animation.DROP,
-            icon:'resources/taxi.png',
-            title: jobj.name
-            });
-
-            marker.addListener('click', function() {
-              map.setCenter(marker.getPosition());
-              $('#notificationBox').slideDown("slow");
-              $('#address').val(oldMarker.title)
-              $('#driver').text("To " + jobj.name)
-              $('#message').focus();
-              selectedEmail = jobj.email
-            });
+            var marker
+            if (jobj.status === "busy")
+            {
+              marker = new google.maps.Marker({
+              position: latlng,
+              map: map,
+              //animation: google.maps.Animation.DROP,
+              icon:'resources/taxi_busy.png',
+              title: jobj.name
+              });
+            }
+            else {
+              marker = new google.maps.Marker({
+              position: latlng,
+              map: map,
+              //animation: google.maps.Animation.DROP,
+              icon:'resources/taxi.png',
+              title: jobj.name
+              });
+              marker.addListener('click', function() {
+                map.setCenter(marker.getPosition());
+                $('#notificationBox').slideDown("slow");
+                $('#address').val(oldMarker.title)
+                $('#driver').text("To " + jobj.name)
+                $('#message').focus();
+                selectedEmail = jobj.email
+              });
+            }
 
             if (index >= 0)
             {
@@ -83,6 +96,16 @@ require(SITE_ROOT . '/PHP/relations.php');
             {
               currentTaxiMarkers.push([marker,jobj]);
             }
+          }
+        }
+        else if (jobj.type === "reply_notification")
+        {
+          if (jobj.reply === "N")
+          {
+            $('#masterNote').clone().attr('id', naming.toString()).prependTo(notificationBar);
+            $('#'+naming.toString()).children('#noteTitle').text(jobj.name + " Rejected Ride");
+            $('#'+naming.toString()).children('#noteText').text(jobj.addr);
+            naming += 1;
           }
         }
       }
@@ -119,6 +142,16 @@ require(SITE_ROOT . '/PHP/relations.php');
 						echo "<div id= 'name'>" . $firstname . "</div>";
 			?>
     </div>
+    <div id= "notificationBar">
+      <center>
+        <div class="notification" id = "masterNote">
+          <div class="noteTitle">A Name HERE</div>
+          <div class="noteText">206 8th Street, Troy NY</div>
+        </div>
+      </center>
+    </div>
+    <div id="notificationButton">
+    </div>
     <div id = "notificationBox">
       <form id="sendForm">
           <label for = "message" class = "notiLabel">Message:</label>
@@ -141,6 +174,21 @@ require(SITE_ROOT . '/PHP/relations.php');
       //alert(data);
       console.log(data)
       ws.send(data);
+    });
+    $("#notificationBar").hide();
+    $("#notificationButton").click(function(){
+      if (!$('#notificationBar').is(":visible")){
+          $("#notificationBar").show();
+      }
+      else {
+        $("#notificationBar").hide();
+      }
+      $("#notificationBar").css("background-color","white");
+    });
+    $(".notification").click(function(){
+      $('#addressBar').val($(this).children('.noteText').text());
+      $("#notificationBar").hide();
+      $(this).remove();
     });
   </script>
 </html>
