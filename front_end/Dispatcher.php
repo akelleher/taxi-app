@@ -145,8 +145,8 @@ require(SITE_ROOT . '/PHP/relations.php');
     <div id= "notificationBar">
       <center>
         <div class="notification" id = "masterNote">
-          <div class="noteTitle">A Name HERE</div>
-          <div class="noteText">206 8th Street, Troy NY</div>
+          <div class="noteTitle"></div>
+          <div class="noteText"></div>
         </div>
       </center>
     </div>
@@ -190,5 +190,6 @@ require(SITE_ROOT . '/PHP/relations.php');
       $("#notificationBar").hide();
       $(this).remove();
     });
+    $('#masterNote').hide()
   </script>
 </html>
