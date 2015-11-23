@@ -105,6 +105,7 @@ require(SITE_ROOT . '/PHP/relations.php');
             $('#masterNote').clone().attr('id', naming.toString()).prependTo(notificationBar);
             $('#'+naming.toString()).children('#noteTitle').text(jobj.name + " Rejected Ride");
             $('#'+naming.toString()).children('#noteText').text(jobj.addr);
+            $('#'+naming.toString()).show();
             naming += 1;
           }
         }
