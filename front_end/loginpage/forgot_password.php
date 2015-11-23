@@ -104,7 +104,7 @@ if( isset($_POST['form']) ) {
               <form class="loginForm" id="PasswordChange" onsubmit="return myFunction()" method="POST">
                 <div class = "form-group">
 					<input type="hidden" name="form" value="PasswordChange" />
-                  <label for = "email" class = "label-align">Email Id:</label>
+                  <label id = "forgot_password_text" for = "email" class = "label-align">An Email Will Be Sent To Your Email. Make Sure You Check Your Spam Folder. Please Enter your Email Id And Press Send Mail Button: </label>
                   <input type = "text" class = "form-control" autofocus="autofocus" id = "email" name = "email" placeholder="Enter your email id here">
 				</div>
                 

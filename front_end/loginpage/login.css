@@ -24,6 +24,12 @@ html, body {
 	color:white;
 	float:right;
 }
+#forgot_password_text
+{
+	color: white;
+	padding: 0;
+	font-size: 16px;
+}
 .form-control {
 	float:left;
 }
