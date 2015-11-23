@@ -44,7 +44,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
                     break
                   }
                 }
-                if (found === false && jobj.note != "active"){
+                if (found === false || jobj.note != "active"){
                   currentTaxiMarkers[i][0].setMap(null);
                 }
                 index = i;
