@@ -106,6 +106,7 @@ require(SITE_ROOT . '/PHP/relations.php');
             $('#'+naming.toString()).children('#noteTitle').text(jobj.name + " Rejected Ride");
             $('#'+naming.toString()).children('#noteText').text(jobj.addr);
             $('#'+naming.toString()).show();
+            $('#notificationButton').css('background-color','red');
             naming += 1;
           }
         }
