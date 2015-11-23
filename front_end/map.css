@@ -179,8 +179,9 @@ html, body, #mapCanvas
 }
 #popUp
 {
-  font-size:15px;
+  font-size:12px;
   background-color: blue;
+  text-overflow: ellipsis;
 }
 #accept
 {
