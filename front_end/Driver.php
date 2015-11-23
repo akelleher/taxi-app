@@ -74,7 +74,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
 
           // __warpper is a function
           // setInterval --> __warpper --> __send
-          setInterval( __warpper, 1000);	// every 5 seconds
+          setInterval( __warpper, 500);	// every 5 seconds
         }
       }
 

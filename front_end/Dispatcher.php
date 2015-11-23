@@ -133,7 +133,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
         ws.send("RETRIEVE_ALL");	// RETRIEVE_ALL is a command on server side
       }
       window.onload = function () {
-        setInterval( get_all_drivers, 1500);
+        setInterval( get_all_drivers, 500);
       }
     </script>
   </head>
