@@ -44,7 +44,6 @@ require(SITE_ROOT . '/PHP/relations.php');
       ws.onmessage = function(evt) {
 
         var recv_msg = evt.data;
-    		document.getElementById("output").value += recv_msg;
 
     		var jobj = JSON.parse(recv_msg);
 
@@ -57,10 +56,10 @@ require(SITE_ROOT . '/PHP/relations.php');
     			var r = confirm(display);
     			if (r == true) {
     				ws.send("<response><reply>Y</reply><email>"+email+
-            "</email><addr>"+jobj.addr+"</addr><name>"+name+"</name></response>");
+            "</email></response>");
     			} else {
             ws.send("<response><reply>N</reply><email>"+email+
-            "</email><addr>"+jobj.addr+"</addr><name>"+name+"</name></response>");
+            "</email></response>");
     			}
     		}
       }
