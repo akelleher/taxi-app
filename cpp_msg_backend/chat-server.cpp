@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <sys/wait.h>
 #include <cstdio>
 #include <unistd.h>
 #include <cstring>
@@ -14,10 +15,11 @@
 /* from http://www.packetizer.com/security/sha1/ */
 #include "sha1-c/sha1.h"
 
-#include <boost/regex.hpp>     /* boost regular expression */
-#include <string>              /* c++ string */
-#include <unordered_map>       /* c++11 hash table */
-#include "./driver/driver.h"          /* class for saving driver information */
+#include <boost/regex.hpp>                   /* boost regular expression */
+#include <string>                            /* c++ string */
+#include <unordered_map>                     /* c++11 hash table */
+#include "./driver/driver.h"                 /* class for saving driver information */
+#include "./cmd_process/cmd_process.h"       /* all non-member functions for processing incoming msg */
 #include "./websocket_func/websocket_func.h" /* implementation of websocket protocol */
 
 
@@ -33,17 +35,26 @@
 char newline = '\n';
 
 boost::regex *verify_driver;
+boost::regex *verify_notification;
+boost::regex *verify_response;
+boost::regex *verify_break;
+
 boost::regex *parse_name;
 boost::regex *parse_latitude;
 boost::regex *parse_longitude;
 boost::regex *parse_email;
+boost::regex *parse_note;
+boost::regex *parse_addr;
+boost::regex *parse_reply;
 
-std::unordered_map<std::string, driver> drivers_location;
 
 struct user {
   int fd;
   int status;
 };
+
+std::unordered_map<std::string, driver> drivers_location;
+int dispatcher_fd;
 
 extern int errno;
 
@@ -62,36 +73,37 @@ char * do_hash( char * sec_ws_key );
 char * encode_base64( int size, unsigned char * src );
 void erase_timeout_driver();
 
-int process_cmd( int chatuser_index,
-                 char * payload,
-                 int payload_length,
-                 char * response,
-                 int * response_length );
-
 int main() {
 
   //<driver><email>pomaj@rpi.edu</email><name>Juan Poma</name><latitude>-73.68</latitude><longitude>42.72</longitude></driver>
-  verify_driver = new boost::regex("^<driver><email>([a-zA-z0-9._]++[@]+[a-zA-Z0-9_]++[.]+[a-zA-Z0-9._]+)</email><name>([a-zA-Z' ]+)</name><latitude>([-0-9]++[.]+[0-9]+)</latitude><longitude>([-0-9]++[.]+[0-9]+)</longitude></driver>$");
+  //<notify><email>pomaj@rpi.edu</email><addr>earth</addr><note>wheel chair</note></notify>
+  //<response><reply>Y</reply><email>pomaj@rpi.edu</email></response>
+  verify_driver = new boost::regex("^<driver><email>([a-zA-z0-9._]++[@]+[a-zA-Z0-9_]++[.]+[a-zA-Z0-9._]+)</email><name>(.+)</name><latitude>([-0-9]++[.]+[0-9]+)</latitude><longitude>([-0-9]++[.]+[0-9]+)</longitude><note>(.+)</note></driver>$");
+  verify_notification = new boost::regex("^<notify><email>(.+)</email><addr>(.+)</addr><note>(.+)</note></notify>$");
+  verify_response = new boost::regex("^<response><reply>(.+)</reply><email>(.+)</email></response>$");
+  verify_break = new boost::regex("^<break>(.+)</break>$");
 
   parse_email = new boost::regex("<email>([a-zA-z0-9._]++[@]+[a-zA-Z0-9_]++[.]+[a-zA-Z0-9._]+)</email>");
-  parse_name = new boost::regex("<name>([a-zA-Z' ]+)</name>");
+  parse_name = new boost::regex("<name>(.+)</name>");
   parse_latitude = new boost::regex("<latitude>([-0-9]++[.]+[0-9]+)</latitude>");
   parse_longitude = new boost::regex("<longitude>([-0-9]++[.]+[0-9]+)</longitude>");
-
+  parse_note = new boost::regex("<note>(.+)</note>");
+  parse_addr = new boost::regex("<addr>(.+)</addr>");
+  parse_reply = new boost::regex("<reply>(.+)</reply>");
 
   char buffer[ BUFFER_SIZE ];
 
   int sock, newsock, len, n;
   unsigned int fromlen;
 
-  fd_set readfds;
+  fd_set readfds;  
 
   /* socket structures from /usr/include/sys/socket.h */
   struct sockaddr_in server;
   struct sockaddr_in client;
 
   unsigned short port = 8787;
-
+  
   /* Create the listener socket as TCP socket */
   /*   (use SOCK_DGRAM for UDP)               */
   sock = socket( PF_INET, SOCK_STREAM, 0 );
@@ -141,7 +153,7 @@ int main() {
     }
 
     /* BLOCK (but blocked on ALL fds that are set via FD_SET */
-    int q = select( FD_SETSIZE, &readfds, NULL, NULL, NULL );
+    select( FD_SETSIZE, &readfds, NULL, NULL, NULL );
 
     if ( FD_ISSET( sock, &readfds ) ) {
 
@@ -153,9 +165,11 @@ int main() {
       printf( "Accepted client connection\n" );
     }
 
+    int i = 0;
+    for ( ;; i++ ) {
 
-    for ( unsigned int i = 0; i < online_users.size(); i++ )
-    {
+      if (i >= online_users.size() ) break;
+
       int fd = online_users[i].fd;
 
       if ( FD_ISSET( fd, &readfds ) )
@@ -165,7 +179,7 @@ int main() {
 
         if ( n == 0 ) close_it = 1;
         else if ( n < 0 ) {
-          perror( "recv()" );
+          perror( "recv()" ); // connection reset by peer
           close_it = 1;
         }
 
@@ -339,7 +353,7 @@ int main() {
             }
 
             else if ( length == 127 ) {
-              printf( "**Frame size over 65,535 bytes. Ignoring for now....\n", length );
+              printf( "**Frame size over 65,535 bytes. Ignoring for now....\n");
               close_it = 1;
             }
 
@@ -380,7 +394,7 @@ int main() {
 
                   if ( opcode == 0x01 ) printf( "PAYLOAD: [%s]\n", payload );
 
-                  int whattodo = process_cmd( online_users[i].fd, payload, length, response, &response_length );
+                  process_cmd( online_users[i].fd, payload);
 
                 }
               }
@@ -401,123 +415,26 @@ int main() {
               break;
             }
           }
-        }
-      }
-    }
-  }
+        } // end of if(close_it)
 
+      } // end of valid receive
+    }   // end of for loop online user
+  }     // end of while(1)
 
   return 0; /* we never get here */
 }
 
 
-
-/* payload is "ME IS <username>\n" etc. */
-/* response has first byte set (FIN and OPCODE) */
-/* returns whether to do nothing (0), close connection (1),
-   broadcast (2), or send a private message (>2) */
-int process_cmd( int index,
-                 char * payload,
-                 int payload_length,
-                 char * response,
-                 int * response_length ) {
-
-  std::string input = payload;
-  printf("length of string: %lu\n", input.length());
-
-  // a driver is updating his location
-  if ( regex_match(input, *verify_driver) ) {
-
-    printf("im uploading driver information\n");
-    boost::sregex_iterator itr_end;
-
-    // parse email
-    boost::sregex_iterator email_itr(input.begin(), input.end(), *parse_email);
-    std::string email = email_itr->str();
-    email.erase(email.begin(), email.begin()+7);		// remove the beginning tag
-    email.erase(email.end()-8, email.end());			// remove the ending tag
-
-    // parse user
-    boost::sregex_iterator name_itr(input.begin(), input.end(), *parse_name);
-    std::string name = name_itr->str();
-    name.erase(name.begin(), name.begin()+6);			// remove the beginning tag
-    name.erase(name.end()-7, name.end());			// remove the ending tag
-
-    // parse latitude
-    boost::sregex_iterator latitude_itr(input.begin(), input.end(), *parse_latitude);
-    std::string latitude = latitude_itr->str();
-    latitude.erase(latitude.begin(), latitude.begin()+10);	// remove the beginning tag
-    latitude.erase(latitude.end()-11, latitude.end());		// remove the ending tag
-    double latitude_num = stod(latitude);
-
-    // parse longitude
-    boost::sregex_iterator longitude_itr(input.begin(), input.end(), *parse_longitude);
-    std::string longitude = longitude_itr->str();
-    longitude.erase(longitude.begin(), longitude.begin()+11);	// remove the beginning tag
-    longitude.erase(longitude.end()-12, longitude.end());	// remove the ending tag
-    double longitude_num = stod(longitude);
-
-    printf("email: %s name: %s latitude: %f longitude: %f\n", 
-           email.c_str(), name.c_str(), latitude_num, longitude_num);
-
-    // insert or update the entry hash table
-    auto search_result = drivers_location.find(email);
-    if (search_result == drivers_location.end())
-      drivers_location.insert( {email, driver(email, name, latitude_num, longitude_num)} );
-    else
-      search_result->second = driver(email, name, latitude_num, longitude_num);
-
-    ws_send(index, std::string("ACK"), 0);
-
-  // a dispatcher is gonna get all the locations
-  } else if ( !(strcmp(payload, "RETRIEVE_ALL")) ) {
-
-      auto itr = drivers_location.begin();
-      for(; itr != drivers_location.end(); itr++) {
-
-        std::string email = itr->first;
-        std::string name = itr->second.name;
-        std::string latitude = std::to_string(itr->second.latitude);
-        std::string longitude = std::to_string(itr->second.longitude);
-
-        std::string msg;
-        msg.append("{\"email\":\"");
-        msg.append(email);
-        msg.append("\",\"name\":\"");
-        msg.append(name);
-        msg.append("\",\"la\":\"");
-        msg.append(latitude);
-        msg.append("\",\"lo\":\"");
-        msg.append(longitude);
-        msg.append("\"}");
-
-	printf("sending: %s length: %zd\n", msg.c_str(), msg.size());
-
-        ws_send(index, msg, 0);
-      }
-
-  } else {
-
-    ws_send(index, std::string("Command Not Found."), 0);
-
-  }
-
-  return 0;
-}
-
 void erase_timeout_driver() {
 
     auto itr = drivers_location.begin();
-    while( itr != drivers_location.end() ) {
-        if (itr->second.timeout()) {
-            printf("removing %s\n", itr->second.email.c_str());
-            itr = drivers_location.erase(itr);
-        }
-        else itr++;
+    for(; itr != drivers_location.end(); itr++ ) {
+        if (itr->second.timeout()) 
+            //printf("removing %s\n", itr->second.email.c_str());
+            //itr = drivers_location.erase(itr);
+            itr->second.note = std::string("timeout");
     }
-
 }
-
 
 
 
