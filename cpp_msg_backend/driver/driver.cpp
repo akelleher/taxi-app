@@ -4,14 +4,18 @@ driver::driver() {
 
     latitude = 0;
     longitude = 0;
+    fd = -1;
 }
 
-driver::driver(const std::string& e, const std::string& n, double la, double lo) {
+driver::driver(int f, const std::string& e, const std::string& n,
+               double la, double lo, const std::string& no) {
 
+    fd = f;
     email = e;
     name = n;
     latitude = la;
     longitude = lo;
+    note = no;
 
     // get current time
     time(&last_access_time);
