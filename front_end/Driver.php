@@ -42,7 +42,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
       ws.onmessage = function(evt) {
 
         var recv_msg = evt.data;
-
+        //handle messages from the dispatcher
     		var jobj = JSON.parse(recv_msg);
 
     		// pop out a dialog
@@ -125,6 +125,8 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
 			</center>
   </body>
   <script>
+
+
     $('#takeBreak').click(function()
     {
       if ($('#takeBreak').text() === "Take a Break"){
@@ -138,6 +140,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
       $('#pickedPassenger').slideToggle();
       $('#logoutButton').slideToggle();
     });
+
     $('#pickedPassenger').click(function()
     {
       if ($('#pickedPassenger').text() === "Picked Up"){
@@ -151,10 +154,12 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
       $('#takeBreak').slideToggle();
       $('#logoutButton').slideToggle();
     });
+
     $('#addressBar').hide();
     $('#popUp').hide();
     $('#accept').hide();
     $('#decline').hide();
+
     $('#accept').click(function(){
       ws.send("<response><reply>Y</reply><email>"+email+
       "</email></response>");
@@ -165,6 +170,7 @@ require(SITE_ROOT . '/PHP/check_logged_in.php');
       $('#takeBreak').show();
       $('#logoutButton').show();
     });
+
     $('#decline').click(function(){
       ws.send("<response><reply>N</reply><email>"+email+
       "</email></response>");
