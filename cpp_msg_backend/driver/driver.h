@@ -9,14 +9,18 @@ class driver {
     public:
 
         driver();
-        driver( const std::string& e, const std::string& n, double la, double lo);
+        driver( int f, const std::string& e, const std::string& n, double la, double lo, const std::string& no);
 
         bool timeout();
 
+        int fd;
         std::string email;
         std::string name;
         double latitude;
         double longitude;
+        std::string note;
+        std::string addr;
+
         time_t last_access_time;
 
 };
