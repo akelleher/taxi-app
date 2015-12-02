@@ -1,7 +1,13 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . '/config.php');
+require(SITE_ROOT . '/PHP/User.php');
 require(SITE_ROOT . '/PHP/check_logged_in.php');
 
+$t = $_SESSION['user']->getIsDispatcher();
+if ($t != true) {
+    $_SESSION['user']->logout();
+    header('Location: ' . SITE_LOGIN_PAGE);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
