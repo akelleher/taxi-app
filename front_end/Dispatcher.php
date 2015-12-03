@@ -52,57 +52,50 @@ if ($t != true) {
                     break
                   }
                 }
-                if (found === false || jobj.note != "active"){
-                  currentTaxiMarkers[i][0].setMap(null);
-                }
+                currentTaxiMarkers[i][0].setMap(null);
                 index = i;
                 break
             }
           }
-          if (found === true && jobj.note === "active"){
-            currentTaxiMarkers[index][0].setIcon("resources/taxi_close.png")
-            return;
+          var latlng = {lat: parseFloat(jobj.la), lng: parseFloat(jobj.lo)}
+          var marker
+          if (jobj.note === "busy"){
+            marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            //animation: google.maps.Animation.DROP,
+            icon:'resources/taxi_busy.png',
+            title: jobj.name
+            });
+          }
+          else if (jobj.note === "active"){
+            marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            //animation: google.maps.Animation.DROP,
+            icon:'resources/taxi.png',
+            title: jobj.name
+            });
           }
           else {
-            var latlng = {lat: parseFloat(jobj.la), lng: parseFloat(jobj.lo)}
-            var marker
-            if (jobj.note === "busy"){
-              marker = new google.maps.Marker({
-              position: latlng,
-              map: map,
-              //animation: google.maps.Animation.DROP,
-              icon:'resources/taxi_busy.png',
-              title: jobj.name
-              });
-            }
-            else if (jobj.note === "active"){
-              marker = new google.maps.Marker({
-              position: latlng,
-              map: map,
-              //animation: google.maps.Animation.DROP,
-              icon:'resources/taxi.png',
-              title: jobj.name
-              });
-            }
-            else {
-              marker = new google.maps.Marker({});
-            }
-            marker.addListener('click', function() {
-              map.setCenter(marker.getPosition());
-              $('#notificationBox').slideDown("slow");
-              $('#address').val(oldMarker.title)
-              $('#driver').text("To " + jobj.name)
-              $('#message').focus();
-              selectedEmail = jobj.email
-            });
-            if (index >= 0)
-            {
-              currentTaxiMarkers[index] = [marker,jobj];
-            }
-            else
-            {
-              currentTaxiMarkers.push([marker,jobj]);
-            }
+            marker = new google.maps.Marker({});
+          }
+          marker.addListener('click', function() {
+            map.setCenter(marker.getPosition());
+            $('#notificationBox').slideDown("slow");
+            $('#address').val(oldMarker.title)
+            $('#driver').text("To " + jobj.name)
+            $('#message').focus();
+            selectedEmail = jobj.email
+          });
+          if (index >= 0) {
+            currentTaxiMarkers[index] = [marker,jobj];
+          }
+          else {
+            currentTaxiMarkers.push([marker,jobj]);
+          }
+          if (found === true && jobj.note === "active") {
+            currentTaxiMarkers[index][0].setIcon("resources/taxi_close.png")
           }
         }
         else if (jobj.type === "reply_notification")
@@ -171,11 +164,15 @@ if ($t != true) {
           <label for = "address" class = "notiLabel">Address:</label>
           <input type = "text" id = "address" class = "notiText" autocomplete="off">
           <label for = "sendNotification" id = "driver" class = "notiLabel"></label>
-        <button type="submit" id = "sendNotification">Send</button>
+        <button type="submit" id = "sendNotification" class = "noteBarButton">Send</button>
+        <button type="button" id = "cancelNotification" class = "noteBarButton">Cancel</button>
       </form>
     </div>
   </body>
   <script>
+    $('#cancelNotification').click(function(){
+      $('#notificationBox').slideUp();
+    });
     $('#sendForm').submit(function (event) {
       event.preventDefault();
       $('#notificationBox').slideUp("slow");

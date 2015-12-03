@@ -148,7 +148,7 @@ html, body, #mapCanvas
   white-space: nowrap;
   overflow: hidden;
 }
-#sendNotification
+.noteBarButton
 {
   font-size:15px;
   width: 100px;
