@@ -19,15 +19,6 @@ CREATE TABLE users(
 	PRIMARY KEY(email)
 );
 
-DROP TABLE IF EXISTS courses;
-CREATE TABLE courses(
-	subj CHAR(4) NOT NULL,
-	crse MEDIUMINT(3) UNSIGNED NOT NULL,
-	name VARCHAR(255) NOT NULL,
-	Dispatcher_code VARCHAR(50) NOT NULL UNIQUE,
-	PRIMARY KEY(subj, crse)
-);
-
 DROP TABLE IF EXISTS passwords;
 CREATE TABLE passwords(
 	email VARCHAR(255) NOT NULL,
@@ -38,44 +29,4 @@ CREATE TABLE passwords(
 		ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS Drivers_courses;
-CREATE TABLE Drivers_courses(
-	email VARCHAR(255) NOT NULL,
-	subj CHAR(4) NOT NULL,
-	crse MEDIUMINT(3) UNSIGNED NOT NULL,
-	PRIMARY KEY(email, subj, crse),
-	FOREIGN KEY(email) REFERENCES users(email)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE,
-	FOREIGN KEY(subj, crse) REFERENCES courses(subj, crse)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE
-);
 
-DROP TABLE IF EXISTS Dispatchers_courses;
-CREATE TABLE Dispatchers_courses(
-	email VARCHAR(255) NOT NULL,
-	subj CHAR(4) NOT NULL,
-	crse MEDIUMINT(3) UNSIGNED NOT NULL,
-	PRIMARY KEY(email, subj, crse),
-	FOREIGN KEY(email) REFERENCES users(email)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE,
-	FOREIGN KEY(subj, crse) REFERENCES courses(subj, crse)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE
-);
-
-DROP TABLE IF EXISTS Dispatcher_Hours;
-CREATE TABLE Dispatcher_Hours(
-	email VARCHAR(255) NOT NULL,
-	subj CHAR(4) NOT NULL,
-	crse MEDIUMINT(3) UNSIGNED NOT NULL,
-	week_day ENUM('SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY') NOT NULL,
-	start_time TIME NOT NULL,
-	end_time TIME NOT NULL,
-	PRIMARY KEY(email, subj, crse, week_day),
-	FOREIGN KEY(email, subj, crse) REFERENCES Dispatchers_courses(email, subj, crse)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE
-);
