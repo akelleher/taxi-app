@@ -104,6 +104,7 @@ if ($t != true) {
           {
             $('#masterNote').clone().attr('id', naming.toString()).attr('class', 'notification').prependTo(notificationBar);
             $('#'+naming.toString()).children('.noteTitle').text(jobj.name + " Rejected Request");
+            $('#'+naming.toString()).children('.noteTitle').css('color','red');
             $('#'+naming.toString()).children('.noteText').text(jobj.addr);
             $('#'+naming.toString()).show();
             $('#notificationButton').css('background-color','red');
@@ -113,6 +114,7 @@ if ($t != true) {
           {
             $('#masterNote').clone().attr('id', naming.toString()).attr('class', 'notificationAccept').prependTo(notificationBar);
             $('#'+naming.toString()).children('.noteTitle').text(jobj.name + " Accepted Request");
+            $('#'+naming.toString()).children('.noteTitle').css('color','blue');
             $('#'+naming.toString()).children('.noteText').text(jobj.addr);
             $('#'+naming.toString()).children('.clickHere').text("");
             $('#'+naming.toString()).show();

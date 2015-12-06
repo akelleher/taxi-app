@@ -125,15 +125,19 @@ if ($t != true) {
           <div class="bottomButton" id="decline">Decline</div>
 					<div class="bottomButton" id="pickedPassenger">Picked Up</div>
 					<div class="bottomButton" id="takeBreak">Take a Break</div>
-          <a href="logout.php">
-					  <div class="bottomButton" id="logoutButton">Logout</div>
-          </a>
+					<div class="bottomButton" id="logoutButton">Logout</div>
 				</div>
 			</center>
   </body>
   <script>
-
-
+    $('#logoutButton').click(function()
+    {
+      status = "offline"
+      $('#logoutButton').text('Logging Out...');
+      setTimeout(function(){
+        window.location.replace("logout.php");
+      }, 3000);
+    });
     $('#takeBreak').click(function()
     {
       if ($('#takeBreak').text() === "Take a Break"){
