@@ -48,7 +48,7 @@ if( isset($_POST['form']) ) {
 					$message_class = 'success';
 				}
 				else {
-					$message = 'ERROR: could not add user to database. Existing User or Password should be longer than 8 characters';
+					$message = 'ERROR: could not add user to database. Password should be longer than 8 characters or user exist already';
 					$message_class = 'error';
 				}
 			}
