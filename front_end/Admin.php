@@ -120,7 +120,7 @@ if( isset($_POST['form']) ) {
 					<input id="AddUser_LastName" type="text" name="lastname" />
 				</div>
 				<div class="input_block">
-					<label for="AddUser_Password">Password (should be at least 8 characters</label>
+					<label for="AddUser_Password">Password</label>
 					<input id="AddUser_Password" type="password" name="password" required />
 				</div>
 				<div class="input_inline">
