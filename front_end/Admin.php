@@ -48,13 +48,13 @@ if( isset($_POST['form']) ) {
 					$message_class = 'success';
 				}
 				else {
-					$message = 'ERROR: could not add user to database.';
+					$message = 'ERROR: could not add user to database. Existing User or Password should be longer than 8 characters';
 					$message_class = 'error';
 				}
 			}
 			catch( Exception $e ) {
 				$message = $e->getMessage();
-				$message_class = 'error';
+				$message_class = 'error password should be at least 5 characters';
 			}
 			break;
 		case 'DeleteUser':
@@ -120,7 +120,7 @@ if( isset($_POST['form']) ) {
 					<input id="AddUser_LastName" type="text" name="lastname" />
 				</div>
 				<div class="input_block">
-					<label for="AddUser_Password">Password</label>
+					<label for="AddUser_Password">Password (should be at least 8 characters</label>
 					<input id="AddUser_Password" type="password" name="password" required />
 				</div>
 				<div class="input_inline">
