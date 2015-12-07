@@ -141,34 +141,57 @@ function initialize()
     var d = R * c;
     return d; // returns the distance in meter
   };
-
   function calcDistances(latLng)
   {
     distances = []
     var max = 3
-    if (currentTaxiMarkers.length < max)
+    var count = 0
+    for (i = 0; i < currentTaxiMarkers.length; i++)
     {
-      max = currentTaxiMarkers.length
-    }
-    for (i = 0; i < max; i++)
-    {
-      distances.push([getDistance(currentTaxiMarkers[i][0].position, latLng),i])
-      console.log(distances[0])
-      console.log(currentTaxiMarkers.length)
-    }
-    distances.sort()
-    for (i = 3; i < currentTaxiMarkers.length; i++)
-    {
-      var aDistance = getDistance(currentTaxiMarkers[i][0].position, latLng)
-      for (j = 0; j < 3; j++)
+      if (currentTaxiMarkers[i][1].note != "offline" && currentTaxiMarkers[i][1].note != "busy" && currentTaxiMarkers[i][1].note != "timeout")
       {
-        if (aDistance < distances[j][0])
-        {
-          distances[j] = [aDistance,i]
-          break
-        }
+        count = count + 1
       }
-      distances.sort()
+    }
+    if (count < max)
+    {
+      max = count
+    }
+    count = 0
+    var lastIndex = 0
+    for (i = 0; i < currentTaxiMarkers.length; i++)
+    {
+      if (currentTaxiMarkers[i][1].note != "offline" && currentTaxiMarkers[i][1].note != "busy" && currentTaxiMarkers[i][1].note != "timeout")
+      {
+        distances.push([getDistance(currentTaxiMarkers[i][0].position, latLng),i])
+        count = count + 1
+      }
+      if (count === max)
+      {
+        break;
+      }
+      lastIndex = lastIndex + 1
+    }
+    distances.sort(function(a, b) {
+      return parseFloat(a[0]) - parseFloat(b[0]);
+    });
+    for (i = lastIndex; i < currentTaxiMarkers.length; i++)
+    {
+      if (currentTaxiMarkers[i][1].note != "offline" && currentTaxiMarkers[i][1].note != "busy" && currentTaxiMarkers[i][1].note != "timeout")
+      {
+        var aDistance = getDistance(currentTaxiMarkers[i][0].position, latLng)
+        for (j = 0; j < max; j++)
+        {
+          if (aDistance < distances[j][0])
+          {
+            distances[j] = [aDistance,i]
+            break
+          }
+        }
+        distances.sort(function(a, b) {
+          return parseFloat(b[0]) - parseFloat(a[0]);
+        });
+      }
     }
   }
   /*
